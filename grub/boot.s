@@ -1,8 +1,6 @@
 // Defines the multiboot header information.
-.set ALIGN, 1<<0
-.set MEMINFO, 1<<1
-.set FLAGS, ALIGN | MEMINFO
 .set MAGIC, 0x1BADB002
+.set FLAGS, 0
 .set CHECKSUM, -(MAGIC + FLAGS)
 
 // Creates the multiboot header.
@@ -15,7 +13,6 @@
  // Creates a stack so we can use C.
 .section .bss
 .align 16
-stack_bottom:
 .skip 16384
 stack_top:
  
@@ -30,5 +27,3 @@ _start:
 loop:
 	hlt
 	jmp loop
-
-.size _start, . - _start
