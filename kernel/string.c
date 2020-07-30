@@ -35,7 +35,7 @@ char specifier_type(const char * s, size_t i)
 	while (++i < strlen(s))
 	{
 		// Is not a number.
-		if (!((s[i] - 48) < 10))
+		if (!is_num(s, i))
 		{
 			return s[i];
 		}
@@ -50,7 +50,7 @@ size_t specifier_len(const char * s, size_t i)
 	{
 		l++;
 		// Is not a number.
-		if (!((s[i] - 48) < 10)) break;
+		if (!is_num(s, i)) break;
 	}
 	return l;
 }
@@ -74,7 +74,7 @@ char * format(const char * s, char * r, ...)
 
 		// Finds the next specifier index.
 		index = find(s + si, '%');
-		
+
 		if (index == STRING_CHARACTER_NOT_FOUND)
 		{
 			strcpy(s + si, r + ri);
