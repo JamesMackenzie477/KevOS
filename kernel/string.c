@@ -35,7 +35,7 @@ char specifier_type(const char * s, size_t i)
 	while (++i < strlen(s))
 	{
 		// Is not a number.
-		if (!is_num(s, i))
+		if (!is_num(s[i]))
 		{
 			return s[i];
 		}
@@ -50,7 +50,7 @@ size_t specifier_len(const char * s, size_t i)
 	{
 		l++;
 		// Is not a number.
-		if (!is_num(s, i)) break;
+		if (!is_num(s[i])) break;
 	}
 	return l;
 }
