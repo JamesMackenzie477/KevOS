@@ -60,7 +60,7 @@ char * format(const char * s, char * r, ...)
 	// Used to iterate over the varargs.
 	va_list a;
 
-	char t, v;
+	char t, v, *str;
 	// Indexes.
 	size_t si = 0, ri = 0, len, index;
 	// Copies the string into the result buffer.
@@ -96,6 +96,14 @@ char * format(const char * s, char * r, ...)
 				v = (char)va_arg(a, int);
 				r[ri] = v;
 				ri += 1;
+				break;
+
+			case 's':
+
+				str = va_arg(a, char *);
+				strncpy(str, r + ri, strlen(str));
+				ri += strlen(str);
+				break;
 
 		}
 
