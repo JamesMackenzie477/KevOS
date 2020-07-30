@@ -55,7 +55,7 @@ size_t specifier_len(const char * s, size_t i)
 	return l;
 }
 
-char * format(const char * s, char * r, ...)
+char * format(char * r, const char * s, ...)
 {
 	// Used to iterate over the varargs.
 	va_list a;

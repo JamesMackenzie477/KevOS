@@ -5,5 +5,5 @@ void kernel_main(void)
 {
 	char c[100];
 	// Prints a message to the screen.
-	kprintf(format("Hello %s!", &c, "world"));
+	kprintf(format(&c, "Hello %s!", "world"));
 }

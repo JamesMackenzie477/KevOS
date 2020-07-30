@@ -15,6 +15,6 @@ static inline is_num(const char c)
 
 // Declares the interface methods.
 size_t strlen(const char* s);
-char * format(const char * s, char * r, ...);
+char * format(char * r, const char * s, ...);
 
 #endif
