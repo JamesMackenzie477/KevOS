@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "string.h"
 
 #ifndef _STDIO_H 
 #define _STDIO_H
@@ -9,6 +10,5 @@
 
 // Declares the interface methods.
 void kprintf(const char * s);
-size_t strlen(const char* s);
 
 #endif
