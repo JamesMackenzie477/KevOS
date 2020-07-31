@@ -20,14 +20,14 @@ size_t find(const char * s, char c)
 	return STRING_CHARACTER_NOT_FOUND;
 }
 
-char * strncpy(const char * s, char * r, size_t n)
+char * strncpy(char * r, const char * s, size_t n)
 {
 	for (size_t i = 0; i < n; i++) r[i] = s[i]; return r;
 }
 
-char * strcpy(const char * s, char * r)
+char * strcpy(char * r, const char * s)
 {
-	strncpy(s, r, strlen(s) + 1);
+	strncpy(r, s, strlen(s) + 1);
 }
 
 char specifier_type(const char * s, size_t i)
@@ -55,62 +55,72 @@ size_t specifier_len(const char * s, size_t i)
 	return l;
 }
 
+char * itoa(char * r, int v)
+{
+	int i = 0;
+	while (v != 0)
+	{
+		int rem = v % 10;
+		r[i++] = '0' + rem;
+		v = v/10;
+	}
+	r[i] = '\0';
+	return r;
+}
+
 char * format(char * r, const char * s, ...)
 {
 	// Used to iterate over the varargs.
 	va_list a;
-
-	char t, v, *str;
-	// Indexes.
-	size_t si = 0, ri = 0, len, index;
-	// Copies the string into the result buffer.
-	// strcpy(s, r);
-
+	char stype, v, *str;
+	size_t si = 0, ri = 0, slen, index;
 	// Sets the address of the varargs.
 	va_start(a, r);
-
+	// Loops through the string replacing each specifier.
 	while (true)
 	{
 
 		// Finds the next specifier index.
 		index = find(s + si, '%');
-
+		// If a specifier index was not found.
 		if (index == STRING_CHARACTER_NOT_FOUND)
 		{
-			strcpy(s + si, r + ri);
-			break;
+			// We add the rest of the string to the result and return.
+			strcpy(r + ri, s + si); break;
 		}
-
-		strncpy(s + si, r + ri, index);
-
+		// Copies the next part of the string into the result.
+		strncpy(r + ri, s + si, index);
+		// Jumps to the specifier index.
 		ri += index;
 		si += index;
-
 		// Gets the length of the specifer.
-		len = specifier_len(s, si);
-		t 	= specifier_type(s, si);
-
-		switch (t)
+		slen = specifier_len(s, si);
+		// Gets the type of the specifier.
+		stype = specifier_type(s, si);
+		// Alters the string according to the type.
+		switch (stype)
 		{
 			case 'c':
+				// Adds the char to the string.
 				v = (char)va_arg(a, int);
 				r[ri] = v;
 				ri += 1;
 				break;
-
 			case 's':
-
+				// Adds a string to the string.
 				str = va_arg(a, char *);
-				strncpy(str, r + ri, strlen(str));
+				strncpy(r + ri, str, strlen(str));
 				ri += strlen(str);
 				break;
-
+			case 'd':
+				// Adds the number to the string.
+				break;
 		}
-
-		si += len;
+		// Skips past the specifier in the source string.
+		si += slen;
 	}
-
+	// We no longer need the varargs.
 	va_end(a);
-
+	// Returns a pointer to the new string.
 	return r;
 }
