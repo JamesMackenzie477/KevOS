@@ -20,14 +20,44 @@ size_t find(const char * s, char c)
 	return STRING_CHARACTER_NOT_FOUND;
 }
 
-char * strncpy(char * r, const char * s, size_t n)
+// Copies n characters from the source string to the destination buffer.
+char * strncpy(char * dst, const char * src, size_t n)
 {
-	for (size_t i = 0; i < n; i++) r[i] = s[i]; return r;
+	for (size_t i = 0; i < n; i++) dst[i] = src[i]; return dst;
 }
 
-char * strcpy(char * r, const char * s)
+// Copies the full source string to the destination buffer.
+char * strcpy(char * dst, const char * src)
 {
-	strncpy(r, s, strlen(s) + 1);
+	strncpy(dst, src, strlen(src) + 1);
+}
+
+// Reverses the source string and stores it in the destination buffer.
+char * strrev(char * src)
+{
+	for(int i = strlen(src) - 1, y = 0; i > y; i--, y++)
+	{
+		char temp = src[i];
+		src[i] = src[y];
+		src[y] = temp;
+	}
+	// Returns the modified string.
+	return src;
+}
+
+char * itoa(char * r, int v)
+{
+	char d[10];
+	int i = 0;
+	while (v != 0)
+	{
+		int rem = v % 10;
+		r[i++] = '0' + rem;
+		v = v/10;
+	}
+	r[i] = '\0';
+	strrev(r);
+	return r;
 }
 
 char specifier_type(const char * s, size_t i)
@@ -53,31 +83,6 @@ size_t specifier_len(const char * s, size_t i)
 		if (!is_num(s[i])) break;
 	}
 	return l;
-}
-
-char * reverse(char * r, char * s)
-{
-	for (int i = 0; i < strlen(s); i++)
-	{
-		r[i] = s[strlen(s) - 1 - i];
-	}
-	return r;
-}
-
-char * itoa(char * r, int v)
-{
-	char d[10];
-	int i = 0;
-	while (v != 0)
-	{
-		int rem = v % 10;
-		r[i++] = '0' + rem;
-		v = v/10;
-	}
-	r[i] = '\0';
-	reverse(&d, r);
-	strcpy(r, &d);
-	return r;
 }
 
 char * format(char * r, const char * s, ...)
