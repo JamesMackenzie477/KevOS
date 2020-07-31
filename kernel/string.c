@@ -55,8 +55,18 @@ size_t specifier_len(const char * s, size_t i)
 	return l;
 }
 
+char * reverse(char * r, char * s)
+{
+	for (int i = 0; i < strlen(s); i++)
+	{
+		r[i] = s[strlen(s) - 1 - i];
+	}
+	return r;
+}
+
 char * itoa(char * r, int v)
 {
+	char d[10];
 	int i = 0;
 	while (v != 0)
 	{
@@ -65,6 +75,8 @@ char * itoa(char * r, int v)
 		v = v/10;
 	}
 	r[i] = '\0';
+	reverse(&d, r);
+	strcpy(r, &d);
 	return r;
 }
 
@@ -72,7 +84,7 @@ char * format(char * r, const char * s, ...)
 {
 	// Used to iterate over the varargs.
 	va_list a;
-	char stype, v, *str;
+	char stype, v, *str, hi[10];
 	size_t si = 0, ri = 0, slen, index;
 	// Sets the address of the varargs.
 	va_start(a, r);
@@ -114,6 +126,9 @@ char * format(char * r, const char * s, ...)
 				break;
 			case 'd':
 				// Adds the number to the string.
+				str = itoa(&hi, va_arg(a, int));
+				strncpy(r + ri, str, strlen(str));
+				ri += strlen(str);
 				break;
 		}
 		// Skips past the specifier in the source string.
