@@ -1,13 +1,26 @@
 #include "stdio.h"
 
 // Sets the VGA buffer address.
-char * vga_buff = (char *)VGA_BUFF_ADDR;
+VGA_ENTRY * vga_buff = (VGA_ENTRY *)VGA_BUFF_ADDR;
+
+int line = 0, column = 0;
 
 // Prints a single character to the screen.
 void putchar(char c)
 {
-	// Adds the character and colour to the buffer.
-	*vga_buff++ = c; *vga_buff++ = 7;
+	// NEWLINE
+	if (c == '\n')
+	{
+		line++; column = 0;
+	}
+	else
+	{
+		// Adds the character and colour to the buffer.
+		vga_buff[((line * VGA_MAX_COLUMNS) + column)].character = c;
+		vga_buff[((line * VGA_MAX_COLUMNS) + column)].colour = 7;
+
+		if (++column > VGA_MAX_COLUMNS) { column = 0; line++; }
+	}
 }
 
 // Prints a string to the screen.

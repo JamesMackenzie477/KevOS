@@ -1,10 +1,11 @@
+#ifndef _STRING_H
+#define _STRING_H
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-
-#ifndef _STRING_H
-#define _STRING_H
+#include "stdio.h"
 
 #define STRING_CHARACTER_NOT_FOUND -1
 
