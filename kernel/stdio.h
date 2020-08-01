@@ -5,7 +5,7 @@
 #include "string.h"
 
 #define VGA_BUFF_ADDR 0xB8000
-#define VGA_MAX_COLUMNS 80
+#define VGA_MAX_COLS 80
 #define VGA_MAX_LINES 25
 
 typedef struct _VGA_ENTRY
@@ -15,6 +15,7 @@ typedef struct _VGA_ENTRY
 } VGA_ENTRY;
 
 // Declares the interface methods.
+void vgainit(void);
 void kprintf(const char * s, ...);
 
 #endif

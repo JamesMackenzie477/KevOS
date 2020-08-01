@@ -3,7 +3,23 @@
 // Sets the VGA buffer address.
 VGA_ENTRY * vga_buff = (VGA_ENTRY *)VGA_BUFF_ADDR;
 
-int line = 0, column = 0;
+int line, column;
+
+// Initialises the VGA buffer.
+void vgainit(void)
+{
+	for (int i = 0; i < VGA_MAX_LINES; i++)
+	{
+		for (int y = 0; y < VGA_MAX_COLS; y++)
+		{
+			vga_buff[((i * VGA_MAX_COLS) + y)].character = NULL;
+			vga_buff[((i * VGA_MAX_COLS) + y)].colour = NULL;
+		}
+	}
+	
+	line = 0;
+	column = 0;
+}
 
 // Prints a single character to the screen.
 void putchar(char c)
@@ -16,10 +32,19 @@ void putchar(char c)
 	else
 	{
 		// Adds the character and colour to the buffer.
-		vga_buff[((line * VGA_MAX_COLUMNS) + column)].character = c;
-		vga_buff[((line * VGA_MAX_COLUMNS) + column)].colour = 7;
+		vga_buff[((line * VGA_MAX_COLS) + column)].character = c;
+		vga_buff[((line * VGA_MAX_COLS) + column)].colour = 7;
 
-		if (++column > VGA_MAX_COLUMNS) { column = 0; line++; }
+		if (++column > VGA_MAX_COLS) { column = 0; line++; }
+	}
+	// NEWPAGE
+	if (line > VGA_MAX_LINES)
+	{
+		// Clear buffer!
+		vgainit();
+
+		line = 0;
+		column = 0;
 	}
 }
 
