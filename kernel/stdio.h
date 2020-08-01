@@ -9,6 +9,6 @@
 #define VGA_BUFF_ADDR 0xB8000
 
 // Declares the interface methods.
-void kprintf(const char * s);
+void kprintf(const char * s, ...);
 
 #endif

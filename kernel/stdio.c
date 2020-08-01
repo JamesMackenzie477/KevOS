@@ -11,8 +11,18 @@ void putchar(char c)
 }
 
 // Prints a string to the screen.
-void kprintf(const char * s)
+void kprintf(const char * s, ...)
 {
-	// Iterates through the string and prints each character.
-	for (size_t i = 0; i < strlen(s); i++) putchar(s[i]);
+	// Stores the formatted string.
+	char c[100];
+	// Used to iterate over the varargs.
+	va_list args;
+	// Sets the address of the varargs.
+	va_start(args, s);
+	// Formats the string.
+	format(&c, s, args);
+	// We no longer need the varargs.
+	va_end(args);
+	// Iterates through the formatted string and prints each character.
+	for (size_t i = 0; i < strlen(c); i++) putchar(c[i]);
 }

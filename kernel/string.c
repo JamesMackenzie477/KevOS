@@ -77,19 +77,14 @@ size_t specifier_len(const char * s)
 	return 1;
 }
 
-char * format(char * dst, const char * src, ...)
+char * format(char * dst, const char * src, va_list args)
 {
-	// Used to iterate over the varargs.
-	va_list args;
-	
 	int int_arg;
 
 	char stype, char_arg, *str_arg, int_str[10];
 
 	size_t dst_i = 0, src_i = 0, slen, index;
 
-	// Sets the address of the varargs.
-	va_start(args, src);
 	// Loops through the string replacing each specifier.
 	while (true)
 	{
@@ -158,8 +153,6 @@ char * format(char * dst, const char * src, ...)
 		// Skips past the specifier in the source string.
 		src_i += slen;
 	}
-	// We no longer need the varargs.
-	va_end(args);
 	// Returns a pointer to the new string.
 	return dst;
 }
