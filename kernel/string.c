@@ -15,8 +15,6 @@ size_t find(const char * s, char c)
 	{
 		if (s[i] == c) return i;
 	}
-	// find the character decode it, patch the string, redo this until finished.
-	// Account for % without anything around it.
 	return STRING_CHARACTER_NOT_FOUND;
 }
 
@@ -29,7 +27,7 @@ char * strncpy(char * dst, const char * src, size_t n)
 // Copies the full source string to the destination buffer.
 char * strcpy(char * dst, const char * src)
 {
-	strncpy(dst, src, strlen(src) + 1);
+	return strncpy(dst, src, strlen(src) + 1);
 }
 
 // Reverses the source string and stores it in the destination buffer.
@@ -45,102 +43,123 @@ char * strrev(char * src)
 	return src;
 }
 
-char * itoa(char * r, int v)
+char * itoa(char * r, int v, int base)
 {
-	char d[10];
 	int i = 0;
 	while (v != 0)
 	{
-		int rem = v % 10;
-		r[i++] = '0' + rem;
-		v = v/10;
+		int rem = v % base;
+		r[i++] = (rem < 10) ? ('0' + rem) : ('a' + (rem - 10));
+		v = v/base;
 	}
 	r[i] = '\0';
 	strrev(r);
 	return r;
 }
 
-char specifier_type(const char * s, size_t i)
+char specifier_type(const char * s)
 {
-	while (++i < strlen(s))
+	for (size_t i = 0; i < strlen(s); i++)
 	{
 		// Is not a number.
-		if (!is_num(s[i]))
-		{
-			return s[i];
-		}
+		if (!is_num(s[i])) return s[i];
 	}
 	return (char)-1;
 }
 
-size_t specifier_len(const char * s, size_t i)
+size_t specifier_len(const char * s)
 {
-	size_t l = 1;
-	while (++i < strlen(s))
+	for (size_t i = 1; i < strlen(s); i++)
 	{
-		l++;
 		// Is not a number.
-		if (!is_num(s[i])) break;
+		if (!is_num(s[i])) return i + 1;
 	}
-	return l;
+	return 1;
 }
 
-char * format(char * r, const char * s, ...)
+char * format(char * dst, const char * src, ...)
 {
 	// Used to iterate over the varargs.
-	va_list a;
-	char stype, v, *str, hi[10];
-	size_t si = 0, ri = 0, slen, index;
+	va_list args;
+	
+	int int_arg;
+
+	char stype, char_arg, *str_arg, int_str[10];
+
+	size_t dst_i = 0, src_i = 0, slen, index;
+
 	// Sets the address of the varargs.
-	va_start(a, r);
+	va_start(args, src);
 	// Loops through the string replacing each specifier.
 	while (true)
 	{
 
 		// Finds the next specifier index.
-		index = find(s + si, '%');
+		index = find(&src[src_i], '%');
 		// If a specifier index was not found.
 		if (index == STRING_CHARACTER_NOT_FOUND)
 		{
 			// We add the rest of the string to the result and return.
-			strcpy(r + ri, s + si); break;
+			strcpy(&dst[dst_i], &src[src_i]); break;
 		}
 		// Copies the next part of the string into the result.
-		strncpy(r + ri, s + si, index);
+		strncpy(&dst[dst_i], &src[src_i], index);
 		// Jumps to the specifier index.
-		ri += index;
-		si += index;
+		dst_i += index;
+		src_i += index;
 		// Gets the length of the specifer.
-		slen = specifier_len(s, si);
+		slen = specifier_len(&src[src_i]);
 		// Gets the type of the specifier.
-		stype = specifier_type(s, si);
+		stype = specifier_type(&src[src_i]);
 		// Alters the string according to the type.
 		switch (stype)
 		{
 			case 'c':
-				// Adds the char to the string.
-				v = (char)va_arg(a, int);
-				r[ri] = v;
-				ri += 1;
+				// Gets the argument as a char.
+				char_arg = (char)va_arg(args, int);
+				// Adds the character to the result string.
+				dst[dst_i] = char_arg;
+				// Increments the index of the result.
+				dst_i += sizeof(char);
+				// Breaks out of the switch.
 				break;
 			case 's':
-				// Adds a string to the string.
-				str = va_arg(a, char *);
-				strncpy(r + ri, str, strlen(str));
-				ri += strlen(str);
+				// Gets the argument as a string.
+				str_arg = va_arg(args, char *);
+				// Copies the string into the result string.
+				strncpy(&dst[dst_i], str_arg, strlen(str_arg));
+				// Increments the result string index.
+				dst_i += strlen(str_arg);
+				// Breaks out of the switch.
 				break;
 			case 'd':
-				// Adds the number to the string.
-				str = itoa(&hi, va_arg(a, int));
-				strncpy(r + ri, str, strlen(str));
-				ri += strlen(str);
+				// Gets the arguments as an int.
+				int_arg = va_arg(args, int);
+				// Converts the int to a string.
+				itoa(&int_str, int_arg, 10);
+				// Copies the string into the result string.
+				strncpy(&dst[dst_i], &int_str, strlen(&int_str));
+				// Increments the result string index.
+				dst_i += strlen(&int_str);
+				// Breaks out of the switch.
+				break;
+			case 'x':
+				// Gets the arguments as an int.
+				int_arg = va_arg(args, int);
+				// Converts the int to a string.
+				itoa(&int_str, int_arg, 16);
+				// Copies the string into the result string.
+				strncpy(&dst[dst_i], &int_str, strlen(&int_str));
+				// Increments the result string index.
+				dst_i += strlen(&int_str);
+				// Breaks out of the switch.
 				break;
 		}
 		// Skips past the specifier in the source string.
-		si += slen;
+		src_i += slen;
 	}
 	// We no longer need the varargs.
-	va_end(a);
+	va_end(args);
 	// Returns a pointer to the new string.
-	return r;
+	return dst;
 }
