@@ -1,7 +1,9 @@
 // Defines the multiboot header information.
-.set MAGIC, 0x1BADB002
-.set FLAGS, 0
-.set CHECKSUM, -(MAGIC + FLAGS)
+.set MAGIC,		0x1BADB002
+.set ALIGN,		1<<0
+.set MEM, 		1<<1
+.set FLAGS,		ALIGN | MEM
+.set CHECKSUM, 	-(MAGIC + FLAGS)
 
 // Creates the multiboot header.
 .section .multiboot
@@ -29,6 +31,8 @@ stack_top:
 
 _start:
 	mov $stack_top, %esp
+	// Adds the address of the Multiboot information data structure.
+	push %ebx
 	call kernel_main
 	cli
 loop:
