@@ -43,15 +43,23 @@ char * strrev(char * src)
 	return src;
 }
 
-char * itoa(char * r, int v, int base)
+char * itoa(char * r, uint64_t v, int base)
 {
 	int i = 0;
-	while (v != 0)
+	if (v == 0)
 	{
-		int rem = v % base;
-		r[i++] = (rem < 10) ? ('0' + rem) : ('a' + (rem - 10));
-		v = v/base;
+		r[i++] = '0';
 	}
+	else
+	{
+		while (v != 0)
+		{
+			uint64_t rem = v % base;
+			r[i++] = (rem < 10) ? ('0' + rem) : ('a' + (rem - 10));
+			v = v/base;
+		}	
+	}
+
 	r[i] = '\0';
 	strrev(r);
 	return r;
@@ -141,6 +149,17 @@ char * format(char * dst, const char * src, va_list args)
 			case 'x':
 				// Gets the arguments as an int.
 				int_arg = va_arg(args, int);
+				// Converts the int to a string.
+				itoa(&int_str, int_arg, 16);
+				// Copies the string into the result string.
+				strncpy(&dst[dst_i], &int_str, strlen(&int_str));
+				// Increments the result string index.
+				dst_i += strlen(&int_str);
+				// Breaks out of the switch.
+				break;
+			case 'l':
+				// Gets the arguments as an int.
+				int_arg = va_arg(args, uint64_t);
 				// Converts the int to a string.
 				itoa(&int_str, int_arg, 16);
 				// Copies the string into the result string.
