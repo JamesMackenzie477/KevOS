@@ -3,6 +3,8 @@ ENTRY(_start)
 SECTIONS
 {
 	. = 1M;
+
+	kernel_start = .;
  
 	.text BLOCK(4K) : ALIGN(4K)
 	{
@@ -25,4 +27,7 @@ SECTIONS
 		*(COMMON)
 		*(.bss)
 	}
+
+	/* Marks the end of the kernel so we can allocate memory around it. */
+	kernel_end = .;
 }
