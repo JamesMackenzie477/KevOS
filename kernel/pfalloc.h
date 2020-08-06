@@ -1,9 +1,14 @@
 #ifndef _PFALLOC_H
 #define _PFALLOC_H
 
-#include "stdio.h"
+#include "kernel.h"
 
 #define PAGE_SIZE 4096
+
+#define GET_PAGE_NUM(O) (O / PAGE_SIZE)
+#define GET_PAGE_COUNT(S) (GET_PAGE_NUM(S) + ((S % PAGE_SIZE) ? 1 : 0))
+
+#define PFALLOC_FIRST -1
 
 typedef struct _MEMORY_REGION
 {
@@ -27,6 +32,10 @@ typedef struct _MBINFO
 	MAPINFO * mmap_addr;
 } MBINFO;
 
-void pfalloc_init(uint8_t * base, uint32_t size);
+// We are storing a pointer to the multiboot header in case it is needed anywhere else.
+// MBINFO * multiboot_info;
+
+void pfalloc_init(MBINFO * mbinfo);
+void * pfalloc_res(void * base, uint32_t pages);
 
 #endif
