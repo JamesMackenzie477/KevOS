@@ -24,7 +24,7 @@ void kernel_main(MBINFO * mbinfo)
 	kprintf("\n\nTEST: 0x%x\n\n", (0xFF << 4) & 0xFF);
 
 	// Checks if memory mappings is included in multiboot info.
-	if (VALIDATE_FLAGS(mbinfo->flags))
+	/*if (VALIDATE_FLAGS(mbinfo->flags))
 	{
 		kprintf("AVAILABLE MEMORY REGIONS\n");
 		kprintf("------------------------\n");
@@ -41,5 +41,5 @@ void kernel_main(MBINFO * mbinfo)
 			kprintf(" - type: 0x%x\n", info[i].type);
 			kprintf(" - pages: %d\n", info[i].length / 4096);
 		}
-	}
+	}*/
 }

@@ -8,6 +8,9 @@
 #define GET_PAGE_NUM(O) (O / PAGE_SIZE)
 #define GET_PAGE_COUNT(S) (GET_PAGE_NUM(S) + ((S % PAGE_SIZE) ? 1 : 0))
 
+#define SET_PAGE_MASK(N) (0x1 << (7 - (N % 8)))
+#define PAGE_TO_BYTE(N) (N / 8)
+
 #define PFALLOC_FIRST -1
 
 typedef struct _MEMORY_REGION
@@ -36,6 +39,6 @@ typedef struct _MBINFO
 // MBINFO * multiboot_info;
 
 void pfalloc_init(MBINFO * mbinfo);
-void * pfalloc_res(void * base, uint32_t pages);
+void pfalloc_set(uint32_t page_num);
 
 #endif
