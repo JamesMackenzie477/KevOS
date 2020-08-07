@@ -5,10 +5,10 @@
 
 #define PAGE_SIZE 4096
 
-#define GET_PAGE_NUM(O) (O / PAGE_SIZE)
+#define GET_PAGE_NUM(O) ((uint32_t)O / PAGE_SIZE)
 #define GET_PAGE_COUNT(S) (GET_PAGE_NUM(S) + ((S % PAGE_SIZE) ? 1 : 0))
 
-#define SET_PAGE_MASK(N) (0x1 << (7 - (N % 8)))
+#define SET_PAGE_MASK(N) (0x1 << ((N % 8)))
 #define PAGE_TO_BYTE(N) (N / 8)
 
 #define PFALLOC_FIRST -1
@@ -39,6 +39,9 @@ typedef struct _MBINFO
 // MBINFO * multiboot_info;
 
 void pfalloc_init(MBINFO * mbinfo);
+uint32_t pfalloc_find_page(void);
+void * pfalloc_alloc(void);
 void pfalloc_set(uint32_t page_num);
+void pfalloc_rel(void * page);
 
 #endif

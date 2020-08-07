@@ -32,13 +32,33 @@ void pfalloc_init(MBINFO * mbinfo)
 	for (int i = 0; i < count; i++) pages[i] = 0;
 	// Reserves the bitmap area.
 	for (int i = 0; i < GET_PAGE_COUNT(count); i++) pfalloc_set(i);
-	// for (int i = 0; i < count; i++) kprintf("%x", pages[i]);
+}
+
+uint32_t pfalloc_find_page(void)
+{
+
+	for (int i = 0; i < count; i++)
+	{
+		// Does this byte have free pages?
+		// if (__builtin_ffs(~pages[i]))
+		{
+			// return (i*8)+(__builtin_ffs(~pages[i]) - 1);
+			for (int b = 0; b < 8; b++)
+			{
+				// Is this a free page?
+				if ((~pages[i] >> b) & 1)
+				{
+					return (i*8)+b;
+				}
+			}
+		}
+	}
 }
 
 /*
- * Allocates and returns a pointer to n amount of pages.
+ * Allocates and returns a pointer to a page.
  */
-void * pfalloc_alloc(void * base, uint32_t pages)
+void * pfalloc_alloc(void)
 {
 	// Allocates the first piece of available memory of the correct size.
 	
@@ -52,7 +72,7 @@ void * pfalloc_alloc(void * base, uint32_t pages)
 
 	// Find an available page.
 
-	uint32_t page_num = 0 /*pfalloc_find_page()*/;
+	uint32_t page_num = pfalloc_find_page();
 
 	// Reserve the page.
 
@@ -60,15 +80,21 @@ void * pfalloc_alloc(void * base, uint32_t pages)
 
 	// Return the address.
 
-	return NULL;
+	return (void *)(region.base_addr + (page_num * PAGE_SIZE));
 }
 
 /*
  * Flips the state of the specified page.
  * Can be used to allocate and release pages.
+ * page_num can be anywhere from 0 to count.
  */
 void pfalloc_set(uint32_t page_num)
 {
 	// Sets the page as used.
 	pages[PAGE_TO_BYTE(page_num)] ^= SET_PAGE_MASK(page_num);
+}
+
+void pfalloc_rel(void * page)
+{
+	pfalloc_set(GET_PAGE_NUM(page));
 }

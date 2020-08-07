@@ -21,7 +21,21 @@ void kernel_main(MBINFO * mbinfo)
 	kprintf("Free memory starts at: 0x%x\n", &kernel_end);
 	kprintf("Multiboot Info: 0x%x\n\n", mbinfo);
 
-	kprintf("\n\nTEST: 0x%x\n\n", (0xFF << 4) & 0xFF);
+	// Allocates a page of 1024 bytes.
+	void * page = pfalloc_alloc();
+
+	kprintf("Page allocated at: 0x%x\n", page);
+
+	// Release the page.
+	pfalloc_rel(page);
+
+	// Allocates a page of 1024 bytes.
+	page = pfalloc_alloc();
+
+	kprintf("Page allocated at: 0x%x\n", page);
+
+	// Release the page.
+	pfalloc_rel(page);
 
 	// Checks if memory mappings is included in multiboot info.
 	/*if (VALIDATE_FLAGS(mbinfo->flags))
