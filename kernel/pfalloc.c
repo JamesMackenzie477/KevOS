@@ -8,15 +8,23 @@ uint8_t * pages;
 /*
  * The amount of pages stored in the bitmap.
  */
-uint32_t count;
+uint32_t length;
 
 /*
- * The region in which we allocate memory.
+ * We need this to parse memory mappings in various functions.
  */
-MAPINFO region;
-
 MBINFO * multibootinfo;
 
+
+void * memset(void * ptr, int value, size_t num)
+{
+	for (size_t i = 0; i < num; i++) ((char*)ptr)[i] = value;
+	return ptr;
+}
+
+/*
+ * Returns a pointer to the first available region as a MAPINFO structure.
+ */
 MAPINFO * get_first_avail()
 {
 	// Gets the mapping info array.
@@ -26,6 +34,29 @@ MAPINFO * get_first_avail()
 	{
 		if (info[i].type == 1) return info;
 	}
+}
+
+/*
+ * Returns the amount of possible pages in memory.
+ */
+uint32_t get_page_count()
+{
+	// Stores the page count.
+	uint32_t page_count = 0;
+	// Gets the mapping info array.
+	MAPINFO * info = multibootinfo->mmap_addr;
+	// Iterates through the array.
+	for (int i = 0; i < multibootinfo->mmap_length / sizeof(MAPINFO); i++)
+	{
+		// If the memory region is available.
+		if (info[i].type == 1)
+		{
+			// Increment the page count.
+			page_count += (info[i].length / PAGE_SIZE);
+		}
+	}
+	// Returns the calculated page count.
+	return page_count;
 }
 
 // TEMP, will be replaced with a different array so type checking isn't needed.
@@ -82,20 +113,20 @@ void pfalloc_init(MBINFO * mbinfo)
 {
 	multibootinfo = mbinfo;
 	// Gets the first available.
-	region = *get_first_avail();
-	// Calculate the amount of pages available in memory.
-	count = (region.length / PAGE_SIZE) / 8;
+	MAPINFO * region = get_first_avail();
+	// Calculates the size of the bitmap in bytes.
+	length = GET_BYTE_COUNT(get_page_count());
 	// Put the bitmap after the kernel.
-	pages = region.base_addr;
+	pages = region->base_addr;
 	// Clears an area to store the bitmap array.
-	for (int i = 0; i < count; i++) pages[i] = 0;
+	memset(pages, 0, length);
 	// Reserves the bitmap area.
-	for (int i = 0; i < GET_PAGE_COUNT(count); i++) pfalloc_set(i);
+	pfallocnset(0, GET_PAGE_COUNT(length));
 
-	uint32_t kernel_size = (((uint32_t)&kernel_end) - ((uint32_t)&kernel_start));
+	// uint32_t kernel_size = (((uint32_t)&kernel_end) - ((uint32_t)&kernel_start));
 
-	kprintf("kernel page: %d\n", addr_to_page(&kernel_start));
-	kprintf("kernel page count: %d\n", GET_PAGE_COUNT(kernel_size));
+	// kprintf("kernel page: %d\n", addr_to_page(&kernel_start));
+	// kprintf("kernel page count: %d\n", GET_PAGE_COUNT(kernel_size));
 
 	// Reserves the kernel area.
 	// for (int i = GET_PAGE_NUM(&kernel_start); i < GET_PAGE_COUNT(kernel_size); i++) pfalloc_set(i);
@@ -104,7 +135,7 @@ void pfalloc_init(MBINFO * mbinfo)
 uint32_t pfalloc_find_page(void)
 {
 
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < length; i++)
 	{
 		// Does this byte have free pages?
 		// if (__builtin_ffs(~pages[i]))
@@ -159,6 +190,11 @@ void pfalloc_set(uint32_t page_num)
 {
 	// Sets the page as used.
 	pages[PAGE_TO_BYTE(page_num)] ^= SET_PAGE_MASK(page_num);
+}
+
+void pfallocnset(uint32_t page_num, size_t n)
+{
+	for (size_t i = 0; i < n; i++) pfalloc_set(page_num + i);
 }
 
 void pfalloc_rel(void * page)

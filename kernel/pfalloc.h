@@ -4,9 +4,12 @@
 #include "kernel.h"
 
 #define PAGE_SIZE 4096
+#define BYTE_SIZE 8
 
 #define GET_PAGE_NUM(O) ((uint32_t)O / PAGE_SIZE)
-#define GET_PAGE_COUNT(S) (GET_PAGE_NUM(S) + ((S % PAGE_SIZE) ? 1 : 0))
+#define GET_PAGE_COUNT(BYTES) ((BYTES / PAGE_SIZE) + ((BYTES % PAGE_SIZE) > 0))
+
+#define GET_BYTE_COUNT(BYTES) ((BYTES / BYTE_SIZE) + ((BYTES % BYTE_SIZE) > 0))
 
 #define SET_PAGE_MASK(N) (0x1 << ((N % 8)))
 #define PAGE_TO_BYTE(N) (N / 8)
