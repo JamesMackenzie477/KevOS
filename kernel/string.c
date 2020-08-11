@@ -175,3 +175,9 @@ char * format(char * dst, const char * src, va_list args)
 	// Returns a pointer to the new string.
 	return dst;
 }
+
+void * memset(void * ptr, int value, size_t num)
+{
+	for (size_t i = 0; i < num; i++) ((char*)ptr)[i] = value;
+	return ptr;
+}

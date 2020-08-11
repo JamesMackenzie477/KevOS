@@ -15,13 +15,6 @@ uint32_t length;
  */
 MBINFO * multibootinfo;
 
-
-void * memset(void * ptr, int value, size_t num)
-{
-	for (size_t i = 0; i < num; i++) ((char*)ptr)[i] = value;
-	return ptr;
-}
-
 /*
  * Returns a pointer to the first available region as a MAPINFO structure.
  */
