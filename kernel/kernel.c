@@ -11,7 +11,7 @@ void kernel_main(MBINFO * mbinfo)
 	// Initialises the physical memory manager.
 	pfalloc_init(mbinfo);
 	// Initialises paging for virtual memory mapping.
-	// init_paging();
+	init_paging();
 
 	// Various kernel debug information.
 	kprintf("\nKernel is mapped at: 0x%x\n", &kernel_start);
@@ -20,7 +20,7 @@ void kernel_main(MBINFO * mbinfo)
 	kprintf("Multiboot Info: 0x%x\n\n", mbinfo);
 
 	// Allocates a page of 4096 bytes.
-	/*void * page;
+	void * page;
 
 	for (int i = 0; i < 10; i++) 
 	{
@@ -29,10 +29,10 @@ void kernel_main(MBINFO * mbinfo)
 		kprintf("Page allocated at: 0x%x\n", page);
 		// Release the page.
 		// pfalloc_rel(page);
-	}*/
+	}
 
 	// Checks if memory mappings is included in multiboot info.
-	if (VALIDATE_FLAGS(mbinfo->flags))
+	/*if (VALIDATE_FLAGS(mbinfo->flags))
 	{
 		kprintf("AVAILABLE MEMORY REGIONS\n");
 		kprintf("------------------------\n");
@@ -49,5 +49,5 @@ void kernel_main(MBINFO * mbinfo)
 			kprintf(" - type: 0x%x\n", info[i].type);
 			kprintf(" - pages: %d\n", info[i].length / 4096);
 		}
-	}
+	}*/
 }
