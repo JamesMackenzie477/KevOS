@@ -22,7 +22,7 @@ void kernel_main(MBINFO * mbinfo)
 	// Allocates a page of 4096 bytes.
 	void * page;
 
-	for (int i = 0; i < 10; i++) 
+	for (int i = 0; i < 1; i++) 
 	{
 		page = pfalloc_alloc();
 		// Displays the address.
@@ -32,7 +32,7 @@ void kernel_main(MBINFO * mbinfo)
 	}
 
 	// Checks if memory mappings is included in multiboot info.
-	/*if (VALIDATE_FLAGS(mbinfo->flags))
+	if (VALIDATE_FLAGS(mbinfo->flags))
 	{
 		kprintf("AVAILABLE MEMORY REGIONS\n");
 		kprintf("------------------------\n");
@@ -49,5 +49,5 @@ void kernel_main(MBINFO * mbinfo)
 			kprintf(" - type: 0x%x\n", info[i].type);
 			kprintf(" - pages: %d\n", info[i].length / 4096);
 		}
-	}*/
+	}
 }

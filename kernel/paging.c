@@ -16,7 +16,7 @@ void init_directory(uint32_t * page_directory)
 	// Stores a pointer to the current table.
 	uint32_t * table;
 	// Iterates through the entries in the page table.
-	for (size_t i = 0; i < 1/*MAX_PAGETABLE_ENTRIES*/; i++)
+	for (size_t i = 0; i < 5/*MAX_PAGETABLE_ENTRIES*/; i++)
 	{
 		// Allocates the table.
 		table = (uint32_t *)pfalloc_alloc();

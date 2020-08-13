@@ -76,7 +76,8 @@ void * page_to_addr(uint32_t page_num)
 // TEMP, will be replaced with a different array so type checking isn't needed.
 uint32_t addr_to_page(void * addr)
 {
-	uint32_t page_nums = 0;
+	uint32_t jump, size = 0;
+
 	// Gets the mapping info array.
 	MAPINFO * info = multibootinfo->mmap_addr;
 	// Iterates through the array.
@@ -87,12 +88,14 @@ uint32_t addr_to_page(void * addr)
 
 			if ((uint32_t)addr < (info[i].base_addr + info[i].length))
 			{
-				return GET_PAGE_NUM(((uint32_t)addr) - page_nums);
+				jump = info[i].base_addr - size;
+
+				return GET_PAGE_NUM(((uint32_t)addr) - jump);
 			}
-		}
-		else
-		{
-			page_nums += info[i].length;
+			else
+			{
+				size += info[i].length;
+			}
 		}
 	}
 	return -1;
@@ -116,13 +119,13 @@ void pfalloc_init(MBINFO * mbinfo)
 	// Reserves the bitmap area.
 	pfallocnset(0, GET_PAGE_COUNT(length));
 
-	// uint32_t kernel_size = (((uint32_t)&kernel_end) - ((uint32_t)&kernel_start));
+	uint32_t kernel_size = (((uint32_t)&kernel_end) - ((uint32_t)&kernel_start));
 
-	// kprintf("kernel page: %d\n", addr_to_page(&kernel_start));
-	// kprintf("kernel page count: %d\n", GET_PAGE_COUNT(kernel_size));
+	kprintf("kernel page: %d\n", addr_to_page(&kernel_start));
+	kprintf("kernel page count: %d\n", GET_PAGE_COUNT(kernel_size));
 
 	// Reserves the kernel area.
-	// for (int i = GET_PAGE_NUM(&kernel_start); i < GET_PAGE_COUNT(kernel_size); i++) pfalloc_set(i);
+	pfallocnset(addr_to_page(&kernel_start), GET_PAGE_COUNT(kernel_size));
 }
 
 uint32_t pfalloc_find_page(void)
