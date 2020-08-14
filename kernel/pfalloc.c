@@ -109,6 +109,7 @@ void pfalloc_init(MBINFO * mbinfo)
 {
 	multibootinfo = mbinfo;
 	// Gets the first available.
+	// I'm hoping there's nothing important stored at the base.
 	MAPINFO * region = get_first_avail();
 	// Calculates the size of the bitmap in bytes.
 	length = GET_BYTE_COUNT(get_page_count());
@@ -117,13 +118,11 @@ void pfalloc_init(MBINFO * mbinfo)
 	// Clears an area to store the bitmap array.
 	memset(pages, 0, length);
 	// Reserves the bitmap area.
-	pfallocnset(0, GET_PAGE_COUNT(length));
-
+	// This is a temporary fix as the first available memory region seems to include a lot of data that we cannot overwrite.
+	// I will most probably change this interface to ignore the first memory section in the future.
+	pfallocnset(0, 159/*GET_PAGE_COUNT(length)*/);
+	// Calculates the kernel size.
 	uint32_t kernel_size = (((uint32_t)&kernel_end) - ((uint32_t)&kernel_start));
-
-	kprintf("kernel page: %d\n", addr_to_page(&kernel_start));
-	kprintf("kernel page count: %d\n", GET_PAGE_COUNT(kernel_size));
-
 	// Reserves the kernel area.
 	pfallocnset(addr_to_page(&kernel_start), GET_PAGE_COUNT(kernel_size));
 }
