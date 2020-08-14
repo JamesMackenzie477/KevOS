@@ -46,5 +46,6 @@ uint32_t pfalloc_find_page(void);
 void * pfalloc_alloc(void);
 void pfalloc_set(uint32_t page_num);
 void pfalloc_rel(void * page);
+uint32_t avail_pages(void);
 
 #endif

@@ -196,3 +196,30 @@ void pfalloc_rel(void * page)
 {
 	pfalloc_set(GET_PAGE_NUM(page));
 }
+
+/*
+ * Returns the amount of available pages in physical memory.
+ * This is a temporary implementation and should be chnaged to deal with a global not a count loop.
+ */
+uint32_t avail_pages(void)
+{
+	uint32_t avail = 0;
+
+	for (int i = 0; i < length; i++)
+	{
+		// Does this byte have free pages?
+		// if (__builtin_ffs(~pages[i]))
+		{
+			// return (i*8)+(__builtin_ffs(~pages[i]) - 1);
+			for (int b = 0; b < 8; b++)
+			{
+				// Is this a free page?
+				if ((~pages[i] >> b) & 1)
+				{
+					avail += 1;
+				}
+			}
+		}
+	}
+	return avail;
+}
