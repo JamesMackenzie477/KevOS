@@ -11,5 +11,6 @@ extern void _set_page_dir(uint32_t *);
 extern void _enable_paging(void);
 
 void init_paging(void);
+void map_table(uint32_t virtual, uint32_t physical);
 
 #endif
