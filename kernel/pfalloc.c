@@ -52,7 +52,9 @@ uint32_t get_page_count()
 	return page_count;
 }
 
-// TEMP, will be replaced with a different array so type checking isn't needed.
+/*
+ * Returns the base address of the specified page number.
+ */
 void * page_to_addr(uint32_t page_num)
 {
 	uint32_t page_nums = 0;
@@ -73,7 +75,9 @@ void * page_to_addr(uint32_t page_num)
 	return (void *)-1;
 }
 
-// TEMP, will be replaced with a different array so type checking isn't needed.
+/*
+ * Returns the page number where the specified address lies.
+ */
 uint32_t addr_to_page(void * addr)
 {
 	uint32_t jump, size = 0;
@@ -85,17 +89,12 @@ uint32_t addr_to_page(void * addr)
 	{
 		if (info[i].type == 1)
 		{
-
 			if ((uint32_t)addr < (info[i].base_addr + info[i].length))
 			{
 				jump = info[i].base_addr - size;
-
 				return GET_PAGE_NUM(((uint32_t)addr) - jump);
 			}
-			else
-			{
-				size += info[i].length;
-			}
+			else size += info[i].length;
 		}
 	}
 	return -1;
@@ -127,7 +126,11 @@ void pfalloc_init(MBINFO * mbinfo)
 	pfallocnset(addr_to_page(&kernel_start), GET_PAGE_COUNT(kernel_size));
 }
 
-uint32_t pfalloc_find_page(void)
+/*
+ * Finds the first available page and returns the page number.
+ * This function is O(n), we need to implement something quicker.
+ */
+uint32_t pfalloc_first_avail(void)
 {
 
 	for (int i = 0; i < length; i++)
@@ -149,37 +152,22 @@ uint32_t pfalloc_find_page(void)
 }
 
 /*
- * Allocates and returns a pointer to a page.
+ * Allocates and returns a pointer to the first available page.
  */
 void * pfalloc_alloc(void)
 {
-	// Allocates the first piece of available memory of the correct size.
-	
-	/*switch ((uint32_t)base)
-	{
-		case PFALLOC_FIRST:
-			break;
-		default:
-			break;
-	}*/
-
+	// We will try to keep track of free pages in the future for speed.
 	// Find an available page.
-
-	uint32_t page_num = pfalloc_find_page();
-
+	uint32_t page_num = pfalloc_first_avail();
 	// Reserve the page.
-
 	pfalloc_set(page_num);
-
 	// Return the address.
-
 	return page_to_addr(page_num);
 }
 
 /*
  * Flips the state of the specified page.
  * Can be used to allocate and release pages.
- * page_num can be anywhere from 0 to count.
  */
 void pfalloc_set(uint32_t page_num)
 {
@@ -187,14 +175,12 @@ void pfalloc_set(uint32_t page_num)
 	pages[PAGE_TO_BYTE(page_num)] ^= SET_PAGE_MASK(page_num);
 }
 
+/*
+ * Sets n pages from page_num.
+ */
 void pfallocnset(uint32_t page_num, size_t n)
 {
 	for (size_t i = 0; i < n; i++) pfalloc_set(page_num + i);
-}
-
-void pfalloc_rel(void * page)
-{
-	pfalloc_set(GET_PAGE_NUM(page));
 }
 
 /*

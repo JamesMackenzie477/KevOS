@@ -9,26 +9,26 @@ uint32_t * page_directory;
  * Maps a whole table to a whole table size of memory.
  * The addresses must be 4 byte aligned.
  */
-void map_table(uint32_t virtual, uint32_t physical)
+void map_region(uint32_t virtual, uint32_t physical)
 {
 	// Calculate the offset into the table for the virtual address.
-	uint32_t off = virtual / 0x400000;
+	uint32_t off = virtual / SIZE_OF_MEM_REGION;
 	// Alters the table.
-	init_identity(page_directory[off] & 0xFFFFFFF0, 0, physical);
+	init_table(GET_PAGE_TABLE(page_directory[off]), physical);
 }
 
 /*
- * Sets the page table entries to a 1:1 virtual to physical mapping.
+ * Sets up the specified page table using the physical address as an offset.
  */
-void init_identity(uint32_t * page_table, uint32_t start, uint32_t base)
+void init_table(uint32_t * page_table, uint32_t physical)
 {
-	for(size_t i = start; i < start + MAX_PAGETABLE_ENTRIES; i++) page_table[i] = base + (i * 0x1000) | 3;
+	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 3;
 }
 
 /*
  * Sets up the page directory by allocating and defaulting the page tables.
  */
-void init_directory()
+void init_directory(void)
 {
 	// Stores a pointer to the current table.
 	uint32_t * table;
@@ -38,7 +38,7 @@ void init_directory()
 		// Allocates the table.
 		table = (uint32_t *)pfalloc_alloc();
 		// Defaults the entries.
-		init_identity(table, i * MAX_PAGETABLE_ENTRIES, 0);
+		init_table(table, i * SIZE_OF_MEM_REGION);
 		// Adds the page table to the page directory.
 		page_directory[i] = (uint32_t)table | 3;
 	}
@@ -53,8 +53,8 @@ void init_paging(void)
 	page_directory = (uint32_t *)pfalloc_alloc();
 	// Initialises the page directory.
 	init_directory();
-	// Maps the kernel to 0xC0000000.
-	map_table(0xC0000000, 0x100000);
+	// Maps the kernel to to it's default virtual address.
+	map_region(KERNEL_MAPPING_ADDR, &kernel_start);
 	// Sets the page directory address.
 	_set_page_dir(page_directory);
 	// Enables paging.
