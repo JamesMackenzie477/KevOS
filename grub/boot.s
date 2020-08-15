@@ -24,10 +24,12 @@ stack_top:
 .global _start
 .global _set_page_dir
 .global _enable_paging
+.global _enable_pae
 
 .type _start, @function
 .type _set_page_dir, @function
 .type _enable_paging, @function
+.type _enable_pae, @function
 
 _start:
 	mov $stack_top, %esp
@@ -38,6 +40,16 @@ _start:
 loop:
 	hlt
 	jmp loop
+
+_enable_pae:
+	push %ebp
+	mov %esp, %ebp
+	mov %cr4, %eax
+	or $0x00000010, %eax
+	mov %eax, %cr4
+	mov %ebp, %esp
+	pop %ebp
+	ret
 
 _enable_paging:
 	push %ebp

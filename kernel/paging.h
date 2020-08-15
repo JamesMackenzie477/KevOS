@@ -17,6 +17,7 @@
 
 extern void _set_page_dir(uint32_t *);
 extern void _enable_paging(void);
+extern void _enable_pae(void);
 
 /*
  * Public functions used to interact with the paging system.

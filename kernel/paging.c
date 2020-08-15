@@ -57,6 +57,9 @@ void init_paging(void)
 	map_region(KERNEL_MAPPING_ADDR, &kernel_start);
 	// Sets the page directory address.
 	_set_page_dir(page_directory);
+	// Enables PAE.
+	// We will enable this later.
+	// _enable_pae();
 	// Enables paging.
 	_enable_paging();
 }
