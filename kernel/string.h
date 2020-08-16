@@ -20,7 +20,7 @@ size_t find(const char * s, char c);
 char * strncpy(char * dst, const char * src, size_t n);
 char * strcpy(char * dst, const char * src);
 char * strrev(char * src);
-char * itoa(char * r, uint64_t v, int base);
+char * itoa(char * r, uint32_t v, int base);
 char specifier_type(const char * s);
 size_t specifier_len(const char * s);
 char * format(char * r, const char * s, va_list args);

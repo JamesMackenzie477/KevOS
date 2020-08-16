@@ -11,16 +11,11 @@ void kernel_main(MBINFO * mbinfo)
 	pfalloc_init(mbinfo);
 	// Initialises paging for virtual memory mapping.
 	init_paging();
+	
 	// Various kernel debug information.
-	kprintf("Kernel is mapped at: 0x%x\n", &kernel_start);
-	kprintf("Kernel size: %d bytes\n", (((uint32_t)&kernel_end) - ((uint32_t)&kernel_start)));
-	kprintf("Free memory starts at: 0x%x\n", &kernel_end);
-	kprintf("Multiboot Info: 0x%x\n", mbinfo);
-	kprintf("Available pages: %d\n\n", avail_pages());
-
-	// Has the kernel been mapped?
+	// Has the kernel been mapped correctly?
 	kprintf("Value at &kernel_start: 0x%x\n", kernel_start);
-	kprintf("Value at 0xC0000000: 0x%x\n", *(uint32_t *)(KERNEL_MAPPING_ADDR));
+	kprintf("Value at 0x%x: 0x%x\n", KERNEL_MAPPING_ADDR, *(uint32_t *)(KERNEL_MAPPING_ADDR));
 
 	// Checks if memory mappings is included in multiboot info.
 	/*if (VALIDATE_FLAGS(mbinfo->flags))

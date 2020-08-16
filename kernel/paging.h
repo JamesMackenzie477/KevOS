@@ -5,11 +5,11 @@
 #include "pfalloc.h"
 
 #define MAX_PAGETABLE_ENTRIES 	1024
-#define SIZE_OF_MEM_REGION 		(MAX_PAGETABLE_ENTRIES * 0x1000)
+#define SIZE_OF_MEM_REGION 		(MAX_PAGETABLE_ENTRIES * PAGE_SIZE)
 #define KERNEL_MAPPING_ADDR 	0xC0000000
 #define GET_PAGE_TABLE_MASK		0xFFFFFFF0
 
-#define GET_PAGE_TABLE(ENTRY) 	(ENTRY & GET_PAGE_TABLE_MASK)
+#define GET_PAGE_TABLE(ENTRY) 	((uint32_t *)(ENTRY & GET_PAGE_TABLE_MASK))
 
 /*
  * These are assembly functions that are linked at compile time.

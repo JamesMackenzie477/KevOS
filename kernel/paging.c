@@ -6,15 +6,26 @@
 uint32_t * page_directory;
 
 /*
+ * Maps the specified virtual address to the given physical address.
+ */
+void map_page(uint32_t virtual, uint32_t physical)
+{
+	// Calculate the offset into the directory for the virtual address.
+	uint32_t dir_off = virtual / SIZE_OF_MEM_REGION;
+	// Calculates the offset into the page table.
+	uint32_t tab_off = (virtual % SIZE_OF_MEM_REGION) / PAGE_SIZE;
+	// Maps the physical page to the virtual one.
+	GET_PAGE_TABLE(page_directory[dir_off])[tab_off] = physical | 3;
+}
+
+/*
  * Maps a whole table to a whole table size of memory.
  * The addresses must be 4 byte aligned.
  */
-void map_region(uint32_t virtual, uint32_t physical)
+void map_pages(uint32_t virtual, uint32_t physical, size_t count)
 {
-	// Calculate the offset into the table for the virtual address.
-	uint32_t off = virtual / SIZE_OF_MEM_REGION;
-	// Alters the table.
-	init_table(GET_PAGE_TABLE(page_directory[off]), physical);
+	// Maps n pages.
+	for(size_t i = 0; i < count; i++) map_page(virtual + (i * PAGE_SIZE), physical + (i * PAGE_SIZE));
 }
 
 /*
@@ -54,7 +65,7 @@ void init_paging(void)
 	// Initialises the page directory.
 	init_directory();
 	// Maps the kernel to to it's default virtual address.
-	map_region(KERNEL_MAPPING_ADDR, &kernel_start);
+	map_pages(KERNEL_MAPPING_ADDR, &kernel_start, MAX_PAGETABLE_ENTRIES);
 	// Sets the page directory address.
 	_set_page_dir(page_directory);
 	// Enables PAE.

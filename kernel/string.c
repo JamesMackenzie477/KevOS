@@ -43,7 +43,7 @@ char * strrev(char * src)
 	return src;
 }
 
-char * itoa(char * r, uint64_t v, int base)
+char * itoa(char * r, uint32_t v, int base)
 {
 	int i = 0;
 	if (v == 0)
@@ -54,7 +54,7 @@ char * itoa(char * r, uint64_t v, int base)
 	{
 		while (v != 0)
 		{
-			uint64_t rem = v % base;
+			uint32_t rem = v % base;
 			r[i++] = (rem < 10) ? ('0' + rem) : ('a' + (rem - 10));
 			v = v/base;
 		}	
