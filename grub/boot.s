@@ -21,17 +21,19 @@ stack_top:
  // Sets up the stack and bridges to the C code.
 .section .text
 
-.global _start
-.global _set_page_dir
-.global _enable_paging
-.global _enable_pae
+.global __start
+.global __set_page_dir
+.global __enable_paging
+.global __enable_pae
+.global __set_GDT
 
-.type _start, @function
-.type _set_page_dir, @function
-.type _enable_paging, @function
-.type _enable_pae, @function
+.type __start, @function
+.type __set_page_dir, @function
+.type __enable_paging, @function
+.type __enable_pae, @function
+.type __set_GDT, @function
 
-_start:
+__start:
 	mov $stack_top, %esp
 	// Adds the address of the Multiboot information data structure.
 	push %ebx
@@ -41,7 +43,7 @@ loop:
 	hlt
 	jmp loop
 
-_enable_pae:
+__enable_pae:
 	push %ebp
 	mov %esp, %ebp
 	mov %cr4, %eax
@@ -51,7 +53,7 @@ _enable_pae:
 	pop %ebp
 	ret
 
-_enable_paging:
+__enable_paging:
 	push %ebp
 	mov %esp, %ebp
 	mov %cr0, %eax
@@ -61,11 +63,20 @@ _enable_paging:
 	pop %ebp
 	ret
 
-_set_page_dir:
+__set_page_dir:
 	push %ebp
 	mov %esp, %ebp
 	mov 8(%esp), %eax
 	mov %eax, %cr3
+	mov %ebp, %esp
+	pop %ebp
+	ret
+
+__set_GDT:
+	push %ebp
+	mov %esp, %ebp
+	mov 8(%esp), %eax
+	lgdt (%eax)
 	mov %ebp, %esp
 	pop %ebp
 	ret

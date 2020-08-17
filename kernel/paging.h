@@ -15,9 +15,9 @@
  * These are assembly functions that are linked at compile time.
  */
 
-extern void _set_page_dir(uint32_t *);
-extern void _enable_paging(void);
-extern void _enable_pae(void);
+extern void __set_page_dir(uint32_t *);
+extern void __enable_paging(void);
+extern void __enable_pae(void);
 
 /*
  * Public functions used to interact with the paging system.

@@ -67,10 +67,10 @@ void init_paging(void)
 	// Maps the kernel to to it's default virtual address.
 	map_pages(KERNEL_MAPPING_ADDR, &kernel_start, MAX_PAGETABLE_ENTRIES);
 	// Sets the page directory address.
-	_set_page_dir(page_directory);
+	__set_page_dir(page_directory);
 	// Enables PAE.
 	// We will enable this later.
 	// _enable_pae();
 	// Enables paging.
-	_enable_paging();
+	__enable_paging();
 }

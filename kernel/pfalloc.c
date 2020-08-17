@@ -162,6 +162,8 @@ void * pfalloc_alloc(void)
 	// Reserve the page.
 	pfalloc_set(page_num);
 	// Return the address.
+	// May implement abiltity to map the page before hand.
+	// This can save us memory in the future.
 	return page_to_addr(page_num);
 }
 
