@@ -29,5 +29,6 @@ extern void __set_GDT(GDT_INFO *);
  */
 
 void init_GDT(void);
+void encode_entry(uint8_t * entry, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags);
 
 #endif
