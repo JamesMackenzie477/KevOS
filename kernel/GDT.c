@@ -8,7 +8,7 @@ GDT_INFO info;
 /*
  * The static Global Descriptor Table.
  */
-uint8_t table[0x32];
+uint8_t table[0x18];
 
 
 /*
@@ -38,14 +38,30 @@ void init_GDT(void)
 {
 	// Adds the default entries to the GDT.
 	
-	encode_entry(&table, 		NULL, 	NULL, 		NULL, NULL);
-	encode_entry(&table[0x8], 	0x0, 	0xFFFFF,	0x9A, 0xC);
-	encode_entry(&table[0x10], 	0x0, 	0xFFFFF,	0x92, 0xC);
+	encode_entry(&table, 		NULL, 	NULL, 		NULL, NULL);	// Null descriptor.
+	encode_entry(&table[0x8], 	0x0, 	0xFFFFF,	0x9A, 0xC);		// Code selector.
+	encode_entry(&table[0x10], 	0x0, 	0xFFFFF,	0x92, 0xC); 	// Data selector.
 
-	// Sets the linear address of the GDT.
-	info.base_addr = &table;
+	// Everything above is fine.
+	// Somewhere below is causing the issue.
+
 	// Sets the size of the GDT.
 	info.limit = sizeof(table);
+	// Sets the linear address of the GDT.
+	info.base_addr = &table;
+
+	GDT_INFO out;
+	memset(&out, 0, sizeof(GDT_INFO));
+
+	kprintf("limit: %d\n", info.limit);
+	kprintf("base_addr: 0x%x\n", info.base_addr);
+
 	// Uses LGDT to set the GDT register.
-	__set_GDT(&info);
+	__set_GDT(&info, &out);
+
+	kprintf("limit: %d\n", out.limit);
+	kprintf("base_addr: 0x%x\n", out.base_addr); // RETURNS INCORRECT BASE. This doesn't seem to cause the crash.
+
+	// Reloads the segment registers.
+	// __reload_seg_regs();
 }

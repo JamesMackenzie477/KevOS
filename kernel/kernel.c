@@ -6,9 +6,9 @@ void kernel_main(MBINFO * mbinfo)
 	// Initialises the vga buffer so we can print to the screen.
 	vgainit();
 	// Initialises the physical memory manager.
-	pfalloc_init(mbinfo);
+	// pfalloc_init(mbinfo);
 	// Initialises paging for virtual memory mapping.
-	init_paging();
+	// init_paging();
 	// Initialises the Global Descriptor Table.
 	init_GDT();
 

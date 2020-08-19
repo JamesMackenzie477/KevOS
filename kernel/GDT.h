@@ -9,20 +9,16 @@
 
 typedef struct _GDT_INFO
 {
-	uint32_t base_addr;
 	uint16_t limit;
+	uint32_t base_addr;
 } GDT_INFO;
-
-typedef struct _GDT_ENTRY
-{
-
-} GDT_ENTRY;
 
 /*
  * Assembly functions.
  */
 
-extern void __set_GDT(GDT_INFO *);
+extern void __set_GDT(GDT_INFO *, GDT_INFO *);
+extern void __reload_seg_regs(void);
 
 /*
  * Enables the kernel to interact with the Global Descriptor Table.

@@ -26,12 +26,14 @@ stack_top:
 .global __enable_paging
 .global __enable_pae
 .global __set_GDT
+.global __reload_seg_regs
 
 .type __start, @function
 .type __set_page_dir, @function
 .type __enable_paging, @function
 .type __enable_pae, @function
 .type __set_GDT, @function
+.type __reload_seg_regs, @function
 
 __start:
 	mov $stack_top, %esp
@@ -77,6 +79,24 @@ __set_GDT:
 	mov %esp, %ebp
 	mov 8(%esp), %eax
 	lgdt (%eax)
+	mov 12(%esp), %eax
+	sgdt (%eax)
+	mov %ebp, %esp
+	pop %ebp
+	ret
+
+__reload_seg_regs:
+	push %ebp
+	mov %esp, %ebp
+
+	ljmp $0x08, $reload_cs
+reload_cs:
+	mov 0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %ax, %ss
 	mov %ebp, %esp
 	pop %ebp
 	ret
