@@ -70,7 +70,7 @@ void init_paging(void)
 	__set_page_dir(page_directory);
 	// Enables PAE.
 	// We will enable this later.
-	// _enable_pae();
+	// __enable_pae();
 	// Enables paging.
 	__enable_paging();
 }

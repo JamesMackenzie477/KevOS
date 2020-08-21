@@ -79,8 +79,6 @@ __set_GDT:
 	mov %esp, %ebp
 	mov 8(%esp), %eax
 	lgdt (%eax)
-	mov 12(%esp), %eax
-	sgdt (%eax)
 	mov %ebp, %esp
 	pop %ebp
 	ret
@@ -91,7 +89,7 @@ __reload_seg_regs:
 
 	ljmp $0x08, $reload_cs
 reload_cs:
-	mov 0x10, %ax
+	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
 	mov %ax, %fs
