@@ -27,6 +27,7 @@ stack_top:
 .global __enable_pae
 .global __set_GDT
 .global __reload_seg_regs
+.global __set_IDT
 
 .type __start, @function
 .type __set_page_dir, @function
@@ -34,6 +35,7 @@ stack_top:
 .type __enable_pae, @function
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
+.type __set_IDT, @function
 
 __start:
 	mov $stack_top, %esp
@@ -95,6 +97,15 @@ reload_cs:
 	mov %ax, %fs
 	mov %ax, %gs
 	mov %ax, %ss
+	mov %ebp, %esp
+	pop %ebp
+	ret
+
+__set_IDT:
+	push %ebp
+	mov %esp, %ebp
+	mov 8(%esp), %eax
+	lidt (%eax)
 	mov %ebp, %esp
 	pop %ebp
 	ret

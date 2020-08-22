@@ -4,6 +4,26 @@
 #include "stdio.h"
 
 /*
+ * Defines the access byte options for a GDT entry.
+ */
+
+#define SEL_CODE 0x9A
+#define SEL_DATA 0x92
+
+/*
+ * Defines the flags for a GDT entry.
+ */
+
+#define PAGE_GRAN	8
+#define PROC_32		4
+
+/*
+ * Allows for a simple concatenation of the high limit and flags. 
+ */
+
+#define FLAGS_LIMIT_HIGH(LIMIT, FLAGS) ((BYTE_INDEX(LIMIT, 2) & 0xF) | ((FLAGS & 0xF) << 4))
+
+/*
  * Defines various specific GDT structures.
  */
 
@@ -34,6 +54,6 @@ extern void __reload_seg_regs(void);
  * Enables the kernel to interact with the Global Descriptor Table.
  */
 
-void init_GDT(void);
+void GDT_init(void);
 
 #endif

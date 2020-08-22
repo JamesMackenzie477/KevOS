@@ -5,6 +5,7 @@
 #include "pfalloc.h"
 #include "paging.h"
 #include "GDT.h"
+#include "IDT.h"
 
 // Used to validate the flags of the multiboot header.
 #define MMAP (1 << 6)

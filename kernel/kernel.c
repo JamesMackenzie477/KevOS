@@ -3,6 +3,8 @@
 // The entry point of the kernel.
 void kernel_main(MBINFO * mbinfo)
 {
+	// Initialisation must be completed in order.
+	
 	// Initialises the vga buffer so we can print to the screen.
 	vgainit();
 	// Initialises the physical memory manager.
@@ -10,7 +12,9 @@ void kernel_main(MBINFO * mbinfo)
 	// Initialises paging for virtual memory mapping.
 	init_paging();
 	// Initialises the Global Descriptor Table.
-	init_GDT();
+	GDT_init();
+	// Initialises the Interrupt Descriptor Table.
+	IDT_init();
 
 	// Various kernel debug information.
 

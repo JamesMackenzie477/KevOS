@@ -8,6 +8,13 @@
 #define VGA_MAX_COLS 80
 #define VGA_MAX_LINES 25
 
+/*
+ * Allows extraction of a certain type from the index of the given variable.
+ */
+
+#define SHORT_INDEX(I, S)	((I >> (S * 16)) & 0xFFFF)
+#define BYTE_INDEX(I, S)	((I >> (S * 8)) & 0xFF)
+
 typedef struct _VGA_ENTRY
 {
 	char character;

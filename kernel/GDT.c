@@ -3,44 +3,40 @@
 /*
  * This will be used with LGDT to describe the Global Descriptor Table.
  */
-GDT_INFO info;
+static GDT_INFO info;
 
 /*
  * The static Global Descriptor Table.
  */
-GDT_ENTRY table[3];
-
+static GDT_ENTRY table[3];
 
 /*
- * Encodes an entry for the Global Dispatch Table.
+ * Encodes an entry for the Global Descriptor Table.
  */
-void encode_entry(GDT_ENTRY * entry, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
+void GDT_add_entry(GDT_ENTRY * entry, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
 {
 	// Adds the limit.
-	entry->limit_low = limit & 0xFFFF;
-
+	entry->limit_low 		= SHORT_INDEX(limit, 0);
 	// Adds the flags.
-	entry->flags_limit_high = ((limit >> 16) & 0xF) | ((flags & 0xF) << 4);
-
+	entry->flags_limit_high = FLAGS_LIMIT_HIGH(limit, flags);
 	// Adds the base.
-	entry->base_low = (base) & 0xFFFF;
-	entry->base_mid = (base >> 16) & 0xFF;
-	entry->base_high = (base >> 24) & 0xFF;
-
+	entry->base_low 		= SHORT_INDEX(base, 0);
+	entry->base_mid 		= BYTE_INDEX(base, 2);
+	entry->base_high 		= BYTE_INDEX(base, 3);
 	// Adds the access byte.
-	entry->access = access;
+	entry->access 			= access;
 }
 
 /*
  * Initialises the Global Descriptor Table.
  */
-void init_GDT(void)
+void GDT_init(void)
 {
 	// Adds the default entries to the GDT.
 	
-	encode_entry(&table[0], 	NULL, 	NULL, 		NULL, NULL);	// Null descriptor.
-	encode_entry(&table[1], 	0x0, 	0xFFFFFFFF,	0x9A, 0xC);		// Code selector.
-	encode_entry(&table[2], 	0x0, 	0xFFFFFFFF,	0x92, 0xC); 	// Data selector.
+	GDT_add_entry(&table[0], 	NULL, 	NULL, 		NULL, 			NULL);					// Null descriptor.
+	GDT_add_entry(&table[1], 	0x0, 	0xFFFFFFFF,	SEL_CODE, 	PAGE_GRAN | PROC_32);	// Code selector.
+	GDT_add_entry(&table[2], 	0x0, 	0xFFFFFFFF,	SEL_DATA, 	PAGE_GRAN | PROC_32); 	// Data selector.
 
 	// Sets the size of the GDT.
 	info.limit = sizeof(table) - 1;
