@@ -6,7 +6,7 @@ VGA_ENTRY * vga_buff = (VGA_ENTRY *)VGA_BUFF_ADDR;
 int line, column;
 
 // Initialises the VGA buffer.
-void vgainit(void)
+void stdio_init(void)
 {
 	for (int i = 0; i < VGA_MAX_LINES; i++)
 	{
@@ -41,7 +41,7 @@ void putchar(char c)
 	if (line > VGA_MAX_LINES)
 	{
 		// Clear buffer!
-		vgainit();
+		stdio_init();
 
 		line = 0;
 		column = 0;

@@ -33,16 +33,8 @@ void IDT_add_entry(IDT_ENTRY * entry, uint32_t offset, uint16_t selector, uint8_
  */
 void IDT_init(void)
 {
-	// Attempt to get excpeitons working.
-
-	for (size_t i = 0; i < 0x1F; i++)
-	{
-		IDT_add_entry(&table[i], (uint32_t)&def_int, DEF_CODE_SEL, GATE_INT | GATE_TRAP);
-	}
-
-	// Triggers a divide by zero exception.
-	// kprintf("%d\n", 0 / 0);
-
+	// Adds the default interrupt.
+	for (size_t i = 0; i < 256; i++) IDT_add_entry(&table[i], (uint32_t)&def_int, DEF_CODE_SEL, GATE_INT | GATE_TRAP);
 	// Sets the size of the IDT.
 	info.limit = sizeof(table) - 1;
 	// Sets the linear address of the IDT.

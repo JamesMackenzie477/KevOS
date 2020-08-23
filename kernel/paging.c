@@ -8,7 +8,7 @@ uint32_t * page_directory;
 /*
  * Maps the specified virtual address to the given physical address.
  */
-void map_page(uint32_t virtual, uint32_t physical)
+void paging_map_page(uint32_t virtual, uint32_t physical)
 {
 	// Calculate the offset into the directory for the virtual address.
 	uint32_t dir_off = virtual / SIZE_OF_MEM_REGION;
@@ -22,16 +22,16 @@ void map_page(uint32_t virtual, uint32_t physical)
  * Maps a whole table to a whole table size of memory.
  * The addresses must be 4 byte aligned.
  */
-void map_pages(uint32_t virtual, uint32_t physical, size_t count)
+void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count)
 {
 	// Maps n pages.
-	for(size_t i = 0; i < count; i++) map_page(virtual + (i * PAGE_SIZE), physical + (i * PAGE_SIZE));
+	for(size_t i = 0; i < count; i++) paging_map_page(virtual + (i * PAGE_SIZE), physical + (i * PAGE_SIZE));
 }
 
 /*
  * Sets up the specified page table using the physical address as an offset.
  */
-void init_table(uint32_t * page_table, uint32_t physical)
+void paging_init_table(uint32_t * page_table, uint32_t physical)
 {
 	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 3;
 }
@@ -39,7 +39,7 @@ void init_table(uint32_t * page_table, uint32_t physical)
 /*
  * Sets up the page directory by allocating and defaulting the page tables.
  */
-void init_directory(void)
+void paging_init_directory(void)
 {
 	// Stores a pointer to the current table.
 	uint32_t * table;
@@ -49,7 +49,7 @@ void init_directory(void)
 		// Allocates the table.
 		table = (uint32_t *)pfalloc_alloc();
 		// Defaults the entries.
-		init_table(table, i * SIZE_OF_MEM_REGION);
+		paging_init_table(table, i * SIZE_OF_MEM_REGION);
 		// Adds the page table to the page directory.
 		page_directory[i] = (uint32_t)table | 3;
 	}
@@ -58,14 +58,12 @@ void init_directory(void)
 /*
  * Initialises the paging tables and registers.
  */
-void init_paging(void)
+void paging_init(void)
 {
 	// Allocates the page directory.
 	page_directory = (uint32_t *)pfalloc_alloc();
 	// Initialises the page directory.
-	init_directory();
-	// Maps the kernel to to it's default virtual address.
-	map_pages(KERNEL_MAPPING_ADDR, &kernel_start, MAX_PAGETABLE_ENTRIES);
+	paging_init_directory();
 	// Sets the page directory address.
 	__set_page_dir(page_directory);
 	// Enables PAE.

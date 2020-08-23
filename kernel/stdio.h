@@ -22,7 +22,7 @@ typedef struct _VGA_ENTRY
 } VGA_ENTRY;
 
 // Declares the interface methods.
-void vgainit(void);
+void stdio_init(void);
 void kprintf(const char * s, ...);
 
 #endif

@@ -6,6 +6,6 @@
  */
 void def_int(void)
 {
-	//kprintf("default interrupt triggered.\n");
+	kprintf("default interrupt triggered.\n");
 	for (;;);
 }

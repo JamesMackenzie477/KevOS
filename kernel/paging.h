@@ -23,6 +23,7 @@ extern void __enable_pae(void);
  * Public functions used to interact with the paging system.
  */
 
-void init_paging(void);
+void paging_init(void);
+void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count);
 
 #endif
