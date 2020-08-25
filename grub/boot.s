@@ -28,6 +28,7 @@ stack_top:
 .global __set_GDT
 .global __reload_seg_regs
 .global __set_IDT
+.global __enable_ints
 
 .type __start, @function
 .type __set_page_dir, @function
@@ -36,6 +37,7 @@ stack_top:
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
 .type __set_IDT, @function
+.type __enable_ints, @function
 
 __start:
 	mov $stack_top, %esp
@@ -106,6 +108,14 @@ __set_IDT:
 	mov %esp, %ebp
 	mov 8(%esp), %eax
 	lidt (%eax)
+	mov %ebp, %esp
+	pop %ebp
+	ret
+
+__enable_ints:
+	push %ebp
+	mov %esp, %ebp
+	sti
 	mov %ebp, %esp
 	pop %ebp
 	ret

@@ -7,5 +7,6 @@
  * Declares all of the interrupts for the IDT to use.
  */
 void def_int(void);
+void irq1(void);
 
 #endif

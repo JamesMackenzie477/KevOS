@@ -32,5 +32,6 @@ typedef struct _IDT_ENTRY
 } __attribute__((packed)) IDT_ENTRY;
 
 extern void __set_IDT(IDT_INFO *);
+extern void __enable_ints(void);
 
 #endif

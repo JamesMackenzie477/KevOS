@@ -33,12 +33,16 @@ void IDT_add_entry(IDT_ENTRY * entry, uint32_t offset, uint16_t selector, uint8_
  */
 void IDT_init(void)
 {
-	// Adds the default interrupt.
-	for (size_t i = 0; i < 256; i++) IDT_add_entry(&table[i], (uint32_t)&def_int, DEF_CODE_SEL, GATE_INT | GATE_TRAP);
+
+	// Adds the keyboard interrupt.
+	IDT_add_entry(&table[0x8], (uint32_t)&irq1, DEF_CODE_SEL, GATE_INT);
+
 	// Sets the size of the IDT.
 	info.limit = sizeof(table) - 1;
 	// Sets the linear address of the IDT.
 	info.base_addr = (uint32_t)&table;
 	// Uses LIDT to set the IDT register.
 	__set_IDT(&info);
+	// Enables hardware interrupts.
+	__enable_ints();
 }

@@ -9,3 +9,8 @@ void def_int(void)
 	kprintf("default interrupt triggered.\n");
 	for (;;);
 }
+
+void irq1(void)
+{
+	def_int();
+}
