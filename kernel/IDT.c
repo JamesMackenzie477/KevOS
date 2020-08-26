@@ -35,7 +35,7 @@ void IDT_init(void)
 {
 
 	// Adds the keyboard interrupt.
-	IDT_add_entry(&table[0x8], (uint32_t)&irq1, DEF_CODE_SEL, GATE_INT);
+	IDT_add_entry(&table[0x8], (uint32_t)&__irq_1, DEF_CODE_SEL, GATE_INT);
 
 	// Sets the size of the IDT.
 	info.limit = sizeof(table) - 1;

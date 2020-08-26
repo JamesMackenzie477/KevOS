@@ -10,7 +10,8 @@ void def_int(void)
 	for (;;);
 }
 
-void irq1(void)
+void irq_1()
 {
-	def_int();
+	// Calls the keyboard handler.
+	keyboard_handler();
 }
