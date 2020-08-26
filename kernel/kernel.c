@@ -27,4 +27,6 @@ void kernel_main(MBINFO * mbinfo)
 	// kprintf("Value at &kernel_start: 0x%x\n", kernel_start);
 	
 	// kprintf("Value at 0x%x: 0x%x\n", KERNEL_MAPPING_ADDR, *(uint32_t *)(KERNEL_MAPPING_ADDR));
+
+	for (;;);
 }

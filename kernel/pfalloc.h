@@ -1,7 +1,7 @@
 #ifndef _PFALLOC_H
 #define _PFALLOC_H
 
-#include "kernel.h"
+#include "stdio.h"
 
 #define PAGE_SIZE 4096
 #define BYTE_SIZE 8
@@ -11,6 +11,10 @@
 #define GET_BYTE_COUNT(	BYTES 	) ((BYTES / BYTE_SIZE) + ((BYTES % BYTE_SIZE) > 0))
 #define SET_PAGE_MASK(	N 		) (0x1 << ((N % 8)))
 #define PAGE_TO_BYTE(	N 		) (N / 8)
+
+// These are used to determine the kernel size.
+extern uint32_t kernel_start;
+extern uint32_t kernel_end;
 
 /*
  * These structure definitions are used to read the multiboot info.
