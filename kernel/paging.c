@@ -31,7 +31,7 @@ void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count)
 /*
  * Sets up the specified page table using the physical address as an offset.
  */
-void paging_init_table(uint32_t * page_table, uint32_t physical)
+static void paging_init_table(uint32_t * page_table, uint32_t physical)
 {
 	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 3;
 }
@@ -39,7 +39,7 @@ void paging_init_table(uint32_t * page_table, uint32_t physical)
 /*
  * Sets up the page directory by allocating and defaulting the page tables.
  */
-void paging_init_directory(void)
+static void paging_init_directory(void)
 {
 	// Stores a pointer to the current table.
 	uint32_t * table;

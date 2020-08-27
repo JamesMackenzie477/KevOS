@@ -3,22 +3,22 @@
 /*
  * The bitmap array where we can track page allocation.
  */
-uint8_t * pages;
+static uint8_t * pages;
 
 /*
  * The amount of pages stored in the bitmap.
  */
-uint32_t length;
+static uint32_t length;
 
 /*
  * We need this to parse memory mappings in various functions.
  */
-MBINFO * multibootinfo;
+static MBINFO * multibootinfo;
 
 /*
  * Returns a pointer to the first available region as a MAPINFO structure.
  */
-MAPINFO * get_first_avail()
+static MAPINFO * get_first_avail()
 {
 	// Gets the mapping info array.
 	MAPINFO * info = multibootinfo->mmap_addr;
@@ -130,7 +130,7 @@ void pfalloc_init(MBINFO * mbinfo)
  * Finds the first available page and returns the page number.
  * This function is O(n), we need to implement something quicker.
  */
-uint32_t pfalloc_first_avail(void)
+static uint32_t pfalloc_first_avail(void)
 {
 
 	for (int i = 0; i < length; i++)

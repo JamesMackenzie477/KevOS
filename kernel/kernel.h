@@ -6,6 +6,7 @@
 #include "paging.h"
 #include "GDT.h"
 #include "IDT.h"
+#include "sys/apic.h"
 
 // Used to validate the flags of the multiboot header.
 #define MMAP (1 << 6)

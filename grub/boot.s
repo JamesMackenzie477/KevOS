@@ -24,10 +24,12 @@ stack_top:
 .global __start
 .global __read_port
 .global __write_port
+.global __read_msr
 
 .type __start, @function
 .type __read_port, @function
 .type __write_port, @function
+.type __read_msr, @function
 
 __start:
 	mov $stack_top, %esp
@@ -54,6 +56,16 @@ __write_port:
 	mov 8(%esp), %dx
 	mov 12(%esp), %ax
 	out %ax, %dx
+	mov %ebp, %esp
+	pop %ebp
+	ret
+
+__read_msr:
+	push %ebp
+	mov %esp, %ebp
+	mov 8(%esp), %ecx
+	mov %eax, 12(%esp)
+	mov %edx, 16(%esp)
 	mov %ebp, %esp
 	pop %ebp
 	ret

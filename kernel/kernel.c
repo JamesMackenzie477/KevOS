@@ -18,6 +18,8 @@ void kernel_main(MBINFO * mbinfo)
 
 	GDT_init(); IDT_init();
 
+	apic_init();
+
 	// Maps the kernel to to it's default virtual address (Higher Half Kernel).
 
 	// paging_map_pages(KERNEL_MAPPING_ADDR, &kernel_start, MAX_PAGETABLE_ENTRIES);

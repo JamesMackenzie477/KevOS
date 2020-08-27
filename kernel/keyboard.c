@@ -21,6 +21,7 @@ void keyboard_init(void)
 void keyboard_handler(void)
 {
 	keyboard_init();
+
 	// Reads the scan code.
 	uint8_t scan_code = __read_port(PORT_DATA);
 

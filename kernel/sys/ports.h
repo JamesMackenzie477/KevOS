@@ -1,5 +1,5 @@
-#ifndef _PORTIO_H
-#define _PORTIO_H
+#ifndef _PORTS_H
+#define _PORTS_H
 
 #include "../stdio.h"
 

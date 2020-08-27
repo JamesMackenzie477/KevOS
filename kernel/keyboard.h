@@ -2,6 +2,7 @@
 #define _KEYBOARD_H
 
 #include "sys/ports.h"
+#include "sys/apic.h"
 
 /*
  * Defines the port numbers for the PS/2 keyboard.
