@@ -44,44 +44,28 @@ loop:
 	jmp loop
 
 __read_port:
-	push %ebp
-	mov %esp, %ebp
-	mov 8(%esp), %dx
+	mov 4(%esp), %dx
 	in %dx, %ax
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
 __write_port:
-	push %ebp
-	mov %esp, %ebp
-	mov 8(%esp), %dx
-	mov 12(%esp), %ax
+	mov 4(%esp), %dx
+	mov 8(%esp), %ax
 	out %ax, %dx
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
 __read_msr:
-	push %ebp
-	mov %esp, %ebp
-	mov 8(%esp), %ecx
+	mov 4(%esp), %ecx
 	rdmsr
-	mov 12(%esp), %ecx
+	mov 8(%esp), %ecx
 	mov %eax, (%ecx)
-	mov 16(%esp), %ecx
+	mov 12(%esp), %ecx
 	mov %edx, (%ecx)
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
 __write_msr:
-	push %ebp
-	mov %esp, %ebp
-	mov 8(%esp), %ecx
-	mov 12(%esp), %eax
-	mov 16(%esp), %edx
+	mov 4(%esp), %ecx
+	mov 8(%esp), %eax
+	mov 12(%esp), %edx
 	wrmsr
-	mov %ebp, %esp
-	pop %ebp
 	ret

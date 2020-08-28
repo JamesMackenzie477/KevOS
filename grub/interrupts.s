@@ -3,28 +3,21 @@
 .global __set_GDT
 .global __reload_seg_regs
 .global __set_IDT
-.global __enable_ints
+.global __cli_sti
 .global __irq_1
 
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
 .type __set_IDT, @function
-.type __enable_ints, @function
+.type __cli_sti, @function
 .type __irq_1, @function
 
 __set_GDT:
-	push %ebp
-	mov %esp, %ebp
-	mov 8(%esp), %eax
+	mov 4(%esp), %eax
 	lgdt (%eax)
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
 __reload_seg_regs:
-	push %ebp
-	mov %esp, %ebp
-
 	ljmp $0x08, $reload_cs
 reload_cs:
 	mov $0x10, %ax
@@ -33,25 +26,16 @@ reload_cs:
 	mov %ax, %fs
 	mov %ax, %gs
 	mov %ax, %ss
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
 __set_IDT:
-	push %ebp
-	mov %esp, %ebp
-	mov 8(%esp), %eax
+	mov 4(%esp), %eax
 	lidt (%eax)
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
-__enable_ints:
-	push %ebp
-	mov %esp, %ebp
+__cli_sti:
+	cli
 	sti
-	mov %ebp, %esp
-	pop %ebp
 	ret
 
 /*

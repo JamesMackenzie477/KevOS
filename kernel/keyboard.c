@@ -29,6 +29,5 @@ void keyboard_handler(void)
 	kprintf("%s ", mapping[scan_code]);
 
 	// Marks the interrupt as complete.
-	// This will be a part of the (A)PIC interface in the future.
-	__write_port(PIC1, INT_END);
+	apic_write_register(REG_EOI, 0);
 }

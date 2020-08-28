@@ -1,17 +1,50 @@
 #include "sys/apic.h"
 
 /*
+ * Disables the PIC by masking all interrupts.
+ * The PIC is outdated so we need to force use of the APIC.
+ */
+static inline void apic_disable_pic()
+{
+	// Disables the first PIC.
+	__write_port(PORT_FIRST_PIC, IMR_IGNORE_ALL);
+	// Disables the second PIC.
+	__write_port(PORT_SECOND_PIC, IMR_IGNORE_ALL);
+}
+
+/*
+ * Reads the value from the specified APIC register.
+ */
+uint32_t apic_read_register(uint32_t reg)
+{
+	// Offsets the base of the APIC memory map by the register number.
+	return *(uint32_t *)(apic_get_base() + reg);
+}
+
+/*
+ * Writes the given value to the specified APIC register.
+ */
+void apic_write_register(uint32_t reg, uint32_t val)
+{
+	// Offsets the base of the APIC memory map by the register number.
+	*(uint32_t *)(apic_get_base() + reg) = val;
+}
+
+/*
  * Enables the APIC.
  */
 static inline void apic_enable()
 {
 	// Sets the enable bit of the APIC BASE MSR.
 	apic_set_base(apic_get_base() | APIC_ENABLE);
-
-	// kprintf("Value: 0x%x\n", *(uint32_t *)(apic_get_base() + 0xF0));
-
 	// Sets the enable bit of the spurious interrupt vector register.
-	*(uint32_t *)(apic_get_base() + 0xF0) |= 0xFF;
+	apic_write_register(REG_SPUR_INT_VECT, apic_read_register(REG_SPUR_INT_VECT) | 0x1FF);
+	// Disables the PIC as it is no longer needed.
+	apic_disable_pic();
+	// Remaps the IRQs.
+	// We may need to set up the PIC before enabling the APIC.
+	// Clears and enables interrupts.
+	__cli_sti();
 }
 
 /*
@@ -56,7 +89,7 @@ static inline bool apic_check(void)
 void apic_init(void)
 {
 	// Ensures that this sytem supports an APIC.
-	if (!apic_check()) return; // Throw error in future.
+	// if (!apic_check()) return; // Throw error in future.
 	// Enables the APIC.
 	apic_enable();
 }
