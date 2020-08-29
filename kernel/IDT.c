@@ -44,5 +44,5 @@ void IDT_init(void)
 	// Uses LIDT to set the IDT register.
 	__set_IDT(&info);
 	// Enables hardware interrupts.
-	// __enable_ints();
+	// __cli_sti();
 }

@@ -3,12 +3,7 @@
 
 #include <cpuid.h>
 #include "../stdio.h"
-#include "ports.h"
-
-#define PORT_FIRST_PIC 0x21
-#define PORT_SECOND_PIC 0xA1
-
-#define IMR_IGNORE_ALL 0xFF
+#include "pic.h"
 
 #define CPUID_APIC (1 << 9)
 

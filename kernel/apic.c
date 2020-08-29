@@ -6,10 +6,7 @@
  */
 static inline void apic_disable_pic()
 {
-	// Disables the first PIC.
-	__write_port(PORT_FIRST_PIC, IMR_IGNORE_ALL);
-	// Disables the second PIC.
-	__write_port(PORT_SECOND_PIC, IMR_IGNORE_ALL);
+	pic_set_imr(IMR_IGNORE_ALL);
 }
 
 /*
@@ -36,9 +33,9 @@ void apic_write_register(uint32_t reg, uint32_t val)
 static inline void apic_enable()
 {
 	// Sets the enable bit of the APIC BASE MSR.
-	apic_set_base(apic_get_base() | APIC_ENABLE);
+	// apic_set_base(apic_get_base() | APIC_ENABLE);
 	// Sets the enable bit of the spurious interrupt vector register.
-	apic_write_register(REG_SPUR_INT_VECT, apic_read_register(REG_SPUR_INT_VECT) | 0x1FF);
+	// apic_write_register(REG_SPUR_INT_VECT, apic_read_register(REG_SPUR_INT_VECT) | 0x1FF);
 	// Disables the PIC as it is no longer needed.
 	apic_disable_pic();
 	// Remaps the IRQs.

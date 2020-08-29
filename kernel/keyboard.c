@@ -29,5 +29,5 @@ void keyboard_handler(void)
 	kprintf("%s ", mapping[scan_code]);
 
 	// Marks the interrupt as complete.
-	apic_write_register(REG_EOI, 0);
+	// apic_write_register(REG_EOI, 0);
 }
