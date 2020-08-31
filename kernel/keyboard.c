@@ -10,8 +10,8 @@ static char * mapping[200] = { 0 };
  */
 void keyboard_init(void)
 {
-	mapping[0x1c] = "ENTER";
-	mapping[0x9c] = "ENTER";
+	mapping[0x1c] = "ENTER UP";
+	mapping[0x9c] = "ENTER DOWN";
 }
 
 /*
@@ -29,5 +29,6 @@ void keyboard_handler(void)
 	kprintf("%s ", mapping[scan_code]);
 
 	// Marks the interrupt as complete.
+	__write_port(PIC1, INT_END);
 	// apic_write_register(REG_EOI, 0);
 }

@@ -16,4 +16,6 @@
 extern uint32_t kernel_start;
 extern uint32_t kernel_end;
 
+extern void __disable_pic(void);
+
 #endif

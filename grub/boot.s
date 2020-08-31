@@ -45,13 +45,13 @@ loop:
 
 __read_port:
 	mov 4(%esp), %dx
-	in %dx, %ax
+	in %dx, %al
 	ret
 
 __write_port:
 	mov 4(%esp), %dx
-	mov 8(%esp), %ax
-	out %ax, %dx
+	mov 8(%esp), %al
+	out %al, %dx
 	ret
 
 __read_msr:

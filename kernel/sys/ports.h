@@ -7,6 +7,6 @@
  * Allows interaction with processor ports via assembly functions. 
  */
 extern uint8_t __read_port(uint16_t);
-extern void __write_port(uint16_t, uint16_t);
+extern void __write_port(uint16_t, uint8_t);
 
 #endif
