@@ -14,11 +14,13 @@ void kernel_main(MBINFO * mbinfo)
 
 	pfalloc_init(mbinfo); paging_init();
 
+	// Initialises the keyboard driver.
+
+	keyboard_init();
+
 	// Initialises rings and interrupts.
 
 	GDT_init(); IDT_init();
-
-	pic_init();
 
 	// Maps the kernel to to it's default virtual address (Higher Half Kernel).
 
