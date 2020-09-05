@@ -8,7 +8,7 @@ void pic_set_imr(uint32_t mask)
 
 void pic_init(void)
 {
-	/*uint8_t pic1_mask = __read_port(PIC1_DATA);
+	uint8_t pic1_mask = __read_port(PIC1_DATA);
 	uint8_t pic2_mask = __read_port(PIC2_DATA);
 
 	__write_port(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4); __write_port(0x80, 0);
@@ -24,5 +24,5 @@ void pic_init(void)
 	__write_port(PIC2_DATA, ICW4_8086); __write_port(0x80, 0);
 
 	__write_port(PIC1_DATA, pic1_mask); __write_port(0x80, 0);
-	__write_port(PIC2_DATA, pic2_mask); __write_port(0x80, 0);*/
+	__write_port(PIC2_DATA, pic2_mask); __write_port(0x80, 0);
 }

@@ -5,10 +5,32 @@
  */
 static char * mapping[200] = { 0 };
 
-static inline void keyboard_send_cmd(uint8_t cmd, uint8_t data)
+/*
+ * Receives data from the PS/2 keyboard via the 8042 Controller.
+ */
+static inline uint8_t keyboard_recv()
 {
-	__write_port(PS2_PORT_COMMAND, cmd);
-	if (!(__read_port(PS2_PORT_STATUS) & 1)) __write_port(PS2_PORT_DATA, data);	
+	// Ensures there is data.
+	if (__read_port(PS2_PORT_STATUS) & PS2_STATUS_OUTPUT)
+	{
+		// Returns the data.
+		return __read_port(PS2_PORT_DATA);
+	}
+	// No data.
+	return NULL;
+}
+
+/*
+ * Sends data to the PS/2 keyboard via the 8042 Controller.
+ */
+static inline void keyboard_send(uint8_t data)
+{
+	// Ensures that the input buffer is empty.
+	if (!(__read_port(PS2_PORT_STATUS) & PS2_STATUS_INPUT))
+	{
+		// Writes the data.
+		__write_port(PS2_PORT_DATA, data);
+	}
 }
 
 static inline uint8_t keyboard_con(uint8_t cmd)
@@ -23,19 +45,29 @@ static inline uint8_t keyboard_con(uint8_t cmd)
  */
 void keyboard_init(void)
 {
-	if (keyboard_con(0xAA) != PS2_CON_TEST_PASSED) return;
-	if (keyboard_con(0xAB) != PS2_PORT_TEST_PASSED) return;
-	if (keyboard_con(0xA9) != PS2_PORT_TEST_PASSED) return;
+	//if (keyboard_con(0xAA) != PS2_CON_TEST_PASSED	) return;
+	//if (keyboard_con(0xAB) != PS2_PORT_TEST_PASSED	) return;
+	//if (keyboard_con(0xA9) != PS2_PORT_TEST_PASSED	) return;
 
-	kprintf("Test passed.\n");
-
-	keyboard_send_cmd(0xD1, 0xF5);
-
-	//__write_port(PS2_PORT_COMMAND, 0xF5);
+	//for (int i = 0; i < 200; i++) mapping[i] = "X";
 
 	// Sets the scan code set.
-	mapping[0x1c] = "enter pressed";
-	mapping[0x9c] = "enter released";
+	// mapping[0x1c] = "enter pressed";
+	// mapping[0x9c] = "enter released";
+
+	keyboard_send(PS2_CMD_SCAN_CODE);
+	kprintf("PS2_CMD_SCAN_CODE: %d\n", keyboard_recv() == PS2_RES_ACK);
+
+	keyboard_send(2);
+	kprintf("2: %d\n", keyboard_recv() == PS2_RES_ACK);
+
+	// Interrupt now gets NULL Because we overwrite the original key.
+
+	// kprintf("0x00: 0x%x\n", keyboard_recv());
+
+	kprintf("VOLATILE\n");
+
+	//keyboard_send(PS2_CMD_ENABLE);
 }
 
 /*
@@ -45,9 +77,9 @@ void keyboard_init(void)
 void keyboard_handler(void)
 {
 	// Reads the scan code.
-	uint8_t scan_code = __read_port(PS2_PORT_DATA);
+	uint8_t scan_code = keyboard_recv();
 	// Converts the scan code.
-	kprintf("%s ", mapping[scan_code]);
+	// kprintf("0x%x ", scan_code);
 	// Marks the interrupt as complete.
 	__write_port(PIC1, INT_END);
 }
