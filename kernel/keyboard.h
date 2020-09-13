@@ -4,6 +4,8 @@
 #include "sys/ports.h"
 #include "sys/apic.h"
 
+#define IS_LETTER(sc) ((sc < 0x40) && (sc > 0xF))
+
 /*
  * Defines the port numbers for the PS/2 keyboard.
  */

@@ -3,7 +3,52 @@
 /*
  * Mapping table for the scan codes.
  */
-static char * mapping[200] = { 0 };
+static char * mapping[] =
+{
+	"Q",
+ 	"W",
+	"E",
+	"R",
+	"T",
+	"Y",
+	"U",
+	"I",
+	"O",
+	"P",
+	"[",
+	"]",
+	"\n",
+	"lctrl",
+	"A",
+	"S",
+ 	"D",
+ 	"F",
+	"G",
+	"H",
+	"J",
+	"K",
+	"L",
+	";",
+	"'",
+	"#",
+	"lshift",
+	"\\",
+	"Z",
+	"X",
+	"C",
+	"V",
+ 	"B",
+ 	"N",
+	"M",
+	",",
+	".",
+	"/",
+
+	"",
+	"",
+	"",
+	" ",
+};
 
 /*
  * Receives data from the PS/2 keyboard via the 8042 Controller.
@@ -49,15 +94,8 @@ void keyboard_init(void)
 	//if (keyboard_con(0xAB) != PS2_PORT_TEST_PASSED	) return;
 	//if (keyboard_con(0xA9) != PS2_PORT_TEST_PASSED	) return;
 
-	//for (int i = 0; i < 200; i++) mapping[i] = "X";
-
-	// Sets the scan code set.
-	// mapping[0x1c] = "enter pressed";
-	// mapping[0x9c] = "enter released";
-
 	keyboard_send(PS2_CMD_SCAN_CODE);
 	kprintf("PS2_CMD_SCAN_CODE: %d\n", keyboard_recv() == PS2_RES_ACK);
-
 	keyboard_send(2);
 	kprintf("2: %d\n", keyboard_recv() == PS2_RES_ACK);
 
@@ -66,6 +104,14 @@ void keyboard_init(void)
 	// kprintf("0x00: 0x%x\n", keyboard_recv());
 
 	kprintf("VOLATILE\n");
+
+
+	// KEYBOARD TEST.
+	for (;;)
+		{
+			uint8_t v = keyboard_recv();
+			if (v && IS_LETTER(v)) kprintf("%s", mapping[(v - 0x10)]);
+		}
 
 	//keyboard_send(PS2_CMD_ENABLE);
 }
@@ -77,9 +123,9 @@ void keyboard_init(void)
 void keyboard_handler(void)
 {
 	// Reads the scan code.
-	uint8_t scan_code = keyboard_recv();
+	uint8_t scan_code = __read_port(PS2_PORT_DATA);
 	// Converts the scan code.
-	// kprintf("0x%x ", scan_code);
+	//kprintf("0x%x ", scan_code);
 	// Marks the interrupt as complete.
 	__write_port(PIC1, INT_END);
 }
