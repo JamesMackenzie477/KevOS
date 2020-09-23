@@ -48,5 +48,6 @@
  */
 void keyboard_init(void);
 void keyboard_handler(void);
+char * poll_keyboard(void);
 
 #endif

@@ -93,27 +93,24 @@ void keyboard_init(void)
 	//if (keyboard_con(0xAA) != PS2_CON_TEST_PASSED	) return;
 	//if (keyboard_con(0xAB) != PS2_PORT_TEST_PASSED	) return;
 	//if (keyboard_con(0xA9) != PS2_PORT_TEST_PASSED	) return;
-
-	keyboard_send(PS2_CMD_SCAN_CODE);
-	kprintf("PS2_CMD_SCAN_CODE: %d\n", keyboard_recv() == PS2_RES_ACK);
-	keyboard_send(2);
-	kprintf("2: %d\n", keyboard_recv() == PS2_RES_ACK);
-
+	//keyboard_send(PS2_CMD_SCAN_CODE);
+	//kprintf("PS2_CMD_SCAN_CODE: %d\n", keyboard_recv() == PS2_RES_ACK);
+	//keyboard_send(2);
+	//kprintf("2: %d\n", keyboard_recv() == PS2_RES_ACK);
 	// Interrupt now gets NULL Because we overwrite the original key.
-
 	// kprintf("0x00: 0x%x\n", keyboard_recv());
-
-	kprintf("VOLATILE\n");
-
-
-	// KEYBOARD TEST.
-	for (;;)
-		{
-			uint8_t v = keyboard_recv();
-			if (v && IS_LETTER(v)) kprintf("%s", mapping[(v - 0x10)]);
-		}
-
+	//kprintf("VOLATILE\n");
 	//keyboard_send(PS2_CMD_ENABLE);
+}
+
+char * poll_keyboard(void)
+{
+	// Recieves the next key from the keyboard buffer.
+	uint8_t v = keyboard_recv();
+	// Maps the scan code to the string representation of the key.
+	if (v && IS_LETTER(v)) return mapping[(v - 0x10)];
+	// nullptr if the scan code cannot be mapped.
+	return NULL;
 }
 
 /*
@@ -122,10 +119,10 @@ void keyboard_init(void)
  */
 void keyboard_handler(void)
 {
+	// Marks the interrupt as handled.
+	__write_port(PIC1, INT_END);
 	// Reads the scan code.
 	uint8_t scan_code = __read_port(PS2_PORT_DATA);
 	// Converts the scan code.
-	//kprintf("0x%x ", scan_code);
-	// Marks the interrupt as complete.
-	__write_port(PIC1, INT_END);
+	kprintf("0x%x ", scan_code);
 }

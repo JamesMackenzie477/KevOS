@@ -43,6 +43,8 @@ void IDT_init(void)
 	info.base_addr = (uint32_t)&table;
 	// Uses LIDT to set the IDT register.
 	__set_IDT(&info);
+	// Enables the keyboard interrupt via the PIC.
+	__write_port(0x21, 0xFD);
 	// Enables hardware interrupts.
-	__cli_sti();
+	__sti();
 }

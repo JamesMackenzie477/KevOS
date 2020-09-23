@@ -38,10 +38,8 @@ static inline void apic_enable()
 	apic_write_register(REG_SPUR_INT_VECT, apic_read_register(REG_SPUR_INT_VECT) | 0x1FF);
 	// Disables the PIC as it is no longer needed.
 	apic_disable_pic();
-	// Remaps the IRQs.
-	// We may need to set up the PIC before enabling the APIC.
-	// Clears and enables interrupts.
-	__cli_sti();
+	// Enables interrupts.
+	__sti();
 }
 
 /*
