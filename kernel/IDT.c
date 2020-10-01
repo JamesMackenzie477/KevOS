@@ -33,9 +33,11 @@ void IDT_add_entry(IDT_ENTRY * entry, uint32_t offset, uint16_t selector, uint8_
  */
 void IDT_init(void)
 {
+	// IDT_add_entry(&table[0x08], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // Double Fault.
 
-	// Adds the keyboard interrupt.
-	IDT_add_entry(&table[0x8], (uint32_t)&__irq_1, DEF_CODE_SEL, GATE_INT);
+	IDT_add_entry(&table[0x21], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // Keyboard Interrupt for now.
+	
+	//IDT_add_entry(&table[0x0D], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // General protection fault
 
 	// Sets the size of the IDT.
 	info.limit = sizeof(table) - 1;
@@ -43,6 +45,7 @@ void IDT_init(void)
 	info.base_addr = (uint32_t)&table;
 	// Uses LIDT to set the IDT register.
 	__set_IDT(&info);
+
 	// Enables the keyboard interrupt via the PIC.
 	__write_port(0x21, 0xFD);
 	// Enables hardware interrupts.

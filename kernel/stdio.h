@@ -24,5 +24,6 @@ typedef struct _VGA_ENTRY
 // Declares the interface methods.
 void stdio_init(void);
 void kprintf(const char * s, ...);
+void putchar(char c);
 
 #endif

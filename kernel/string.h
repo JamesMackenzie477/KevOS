@@ -9,7 +9,7 @@
 
 #define STRING_CHARACTER_NOT_FOUND -1
 
-static inline is_num(const char c)
+static inline bool is_num(const char c)
 {
 	return ((c - 48) < 10);
 }
