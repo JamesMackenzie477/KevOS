@@ -19,6 +19,13 @@ void kernel_main(MBINFO * mbinfo)
 
 	pfalloc_init(mbinfo); paging_init();
 
+	// TODO
+	// Memory zones (look at linux implementation).
+	// Mapping page directory to itself (lecture slides).
+	// Add constants
+	// ne2000
+	// PCI
+
 	// Initialises the keyboard driver.
 
 	keyboard_init();
