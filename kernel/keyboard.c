@@ -254,10 +254,14 @@ char * poll_keyboard(void)
  * Character mappings.
  */
 static const char * row1 		= "`1234567890-= ";
+static const char * row1_upper 	= "¬!\"£$%^&*()_+ ";
+
 static const char * row2 		= "\tqwertyuiop[]\n";
 static const char * row2_upper 	= "\tQWERTYUIOP{}\n";
+
 static const char * row3 		= " asdfghjkl;'#";
 static const char * row3_upper 	= " ASDFGHJKL:@~";
+
 static const char * row4 		= " \\zxcvbnm,./ ";
 static const char * row4_upper 	= " |ZXCVBNM<>? ";
 
@@ -269,23 +273,17 @@ char sc2char(uint32_t sc)
 	// Makes sure the key isn't being released.
 	if (!IS_RELEASED(sc))
 	{
-		// Gets the row.
-		uint32_t row = GET_ROW(sc);
-		// Gets the column.
-		uint32_t col = GET_COL(sc);
-		// Is the key shifted?
-		bool shifted = IS_SHIFTED(sc);
+		// Gets the row and column number.
+		uint32_t row = GET_ROW(sc), col = GET_COL(sc);
+		// We index into upper arrays if the key is shifted.
+		bool shift = IS_SHIFTED(sc);
 		// Indexes into the correct row.
 		switch (row)
 		{
-			case 1:
-				return row1[col];
-			case 2:
-				return shifted ? row2_upper[col] : row2[col];
-			case 3:
-				return shifted ? row3_upper[col] : row3[col];
-			case 4:
-				return shifted ? row4_upper[col] : row4[col];
+			case 1: return shift ? row1_upper[col] : row1[col];
+			case 2: return shift ? row2_upper[col] : row2[col];
+			case 3: return shift ? row3_upper[col] : row3[col];
+			case 4: return shift ? row4_upper[col] : row4[col];
 		}
 	}
 	// No key found.
