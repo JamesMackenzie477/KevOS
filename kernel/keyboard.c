@@ -1,13 +1,20 @@
 #include "keyboard.h"
 
 /*
+ * Keeps track of the state of certain "shift" keys so scancode can be masked.
+ */
+static char shift_mask = 0;
+
+
+/*
  * Maps the keyboard scan codes to something more understandable.
  */
 static char * mapping[] =
 {
+	// Padding.
 	0x00,
 
-	// ESC
+	// ESC (NOT IMPLEMENTED)
 	0x00,
 
 	// First row.
@@ -41,7 +48,7 @@ static char * mapping[] =
 	0x4C,
 	0x4D,
 
-	// Left ctrl.
+	// Left ctrl. (NOT IMPLEMENTED)
 	0x00,
 
 	// Third row.
@@ -58,6 +65,22 @@ static char * mapping[] =
 	0x6C,
 	0x6B,
 
+	// Fourth row.
+	0x80,
+	0x81,
+	0x82,
+	0x83,
+	0x84,
+	0x85,
+	0x86,
+	0x87,
+	0x88,
+	0x89,
+	0x8A,
+	0x8C,
+	0x8B,
+
+	// NOT IMPLEMENTED.
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -161,7 +184,7 @@ static char * mapping[] =
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 /*
@@ -228,6 +251,48 @@ char * poll_keyboard(void)
 }
 
 /*
+ * Character mappings.
+ */
+static const char * row1 		= "`1234567890-= ";
+static const char * row2 		= "\tqwertyuiop[]\n";
+static const char * row2_upper 	= "\tQWERTYUIOP{}\n";
+static const char * row3 		= " asdfghjkl;'#";
+static const char * row3_upper 	= " ASDFGHJKL:@~";
+static const char * row4 		= " \\zxcvbnm,./ ";
+static const char * row4_upper 	= " |ZXCVBNM<>? ";
+
+/*
+ * Converts a scancode to it's corrosponding ascii mapping.
+ */
+char sc2char(uint32_t sc)
+{
+	// Makes sure the key isn't being released.
+	if (!IS_RELEASED(sc))
+	{
+		// Gets the row.
+		uint32_t row = GET_ROW(sc);
+		// Gets the column.
+		uint32_t col = GET_COL(sc);
+		// Is the key shifted?
+		bool shifted = IS_SHIFTED(sc);
+		// Indexes into the correct row.
+		switch (row)
+		{
+			case 1:
+				return row1[col];
+			case 2:
+				return shifted ? row2_upper[col] : row2[col];
+			case 3:
+				return shifted ? row3_upper[col] : row3[col];
+			case 4:
+				return shifted ? row4_upper[col] : row4[col];
+		}
+	}
+	// No key found.
+	return 0;
+}
+
+/*
  * Should be called upon a key press interrupt.
  * Handles the key press.
  */
@@ -237,6 +302,28 @@ void keyboard_handler(void)
 	__write_port(PIC1, INT_END);
 	// Reads the scan code.
 	uint8_t scan_code = __read_port(PS2_PORT_DATA);
-	// Converts the scan code.
-	kprintf("0x%x ", mapping[scan_code]);
+	// Is true if we are looking at a key release.
+	bool release = ((scan_code - 0x80) > 0x0) ? 1 : 0;
+	// Converts the scan code into something more understandable.
+	uint32_t code = mapping[release ? (scan_code - 0x80) : scan_code];
+	// Has a shift key been pressed?
+	switch (code)
+	{
+		case 0x80:
+			// Shift pressed.
+			shift_mask = (release ? (shift_mask ^= SHIFT_DOWN) : (shift_mask |= SHIFT_DOWN));
+			break;
+		default:
+			// Adds the shift maks to the scan code.
+			code |= ((shift_mask | release) << 8);
+			break;
+	}
+	// Converts the code to an ascii character.
+	char ascii = sc2char(code);
+	// Ensures it was converted.
+	if (ascii)
+	{
+		// Prints the scan code.
+		kprintf("%c", ascii);
+	}
 }

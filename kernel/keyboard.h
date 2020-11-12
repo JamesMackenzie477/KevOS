@@ -44,6 +44,23 @@
 #define IS_DATA(S) (S & OUT_BUFF)
 
 /*
+ * Masks used to mask scancode depending on keyboard state.
+ */
+
+// |    0    |    1    |    2    |    3    |
+//    shift    released  numlock   scrllock
+
+#define SHIFT_DOWN 0x2
+
+/*
+ * Used to mask new scan codes to find various information.
+ */
+#define GET_ROW(S) ((S >> 5) & 0x7)
+#define GET_COL(S) (S & 0x1F)
+#define IS_RELEASED(S) ((S >> 0x8) & 0x1)
+#define IS_SHIFTED(S) ((S >> 0x9) & 0x1)
+
+/*
  * Declares the public interface functions.
  */
 void keyboard_init(void);
