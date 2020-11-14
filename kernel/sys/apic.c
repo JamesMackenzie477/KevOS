@@ -1,4 +1,4 @@
-#include "sys/apic.h"
+#include "apic.h"
 
 /*
  * Disables the PIC by masking all interrupts.

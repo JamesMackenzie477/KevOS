@@ -4,15 +4,31 @@
 .global __reload_seg_regs
 .global __set_IDT
 .global __sti
-.global __irq_1
-.global __def_int
 
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
 .type __set_IDT, @function
 .type __sti, @function
-.type __irq_1, @function
-.type __def_int, @function
+
+// Macro to define interrupt routines.
+.macro irtn f
+.global __\f
+.type __\f, @function
+__\f:
+	cli
+	pusha
+	push %ds
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	call \f
+	pop %ds
+	popa
+	sti
+	iret
+.endm
 
 __set_GDT:
 	mov 4(%esp), %eax
@@ -43,26 +59,6 @@ __sti:
  * Assembly wrappers for all of the interrupt handlers.
  */
 
-__irq_1:
-	cli			// Disables interrupts.
-	pusha 		// Saves the registers state.
-	push %ds 	// Saves the ds register.
-
-	mov $0x10, %ax
-	mov %ax, %ds
-	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
-
-	call irq_1 	// Handles the interrupt.
-
-	pop %ds 	// Restores the ds register.
-	popa 		// Restores the registers state.
-	sti 		// Enables interrupts.
-	// set piece of memoryregister to certain value and then check it during execution.
-
-	iret		// Special return instruction for interrupts only.
-
-__def_int:
-	call irq_1
-	iret
+irtn irq_1
+irtn double_fault
+irtn def_int

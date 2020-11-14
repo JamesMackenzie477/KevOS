@@ -33,9 +33,8 @@ void IDT_add_entry(IDT_ENTRY * entry, uint32_t offset, uint16_t selector, uint8_
  */
 void IDT_init(void)
 {
-	// IDT_add_entry(&table[0x08], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // Double Fault.
-
-	IDT_add_entry(&table[0x21], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // Keyboard Interrupt for now.
+	IDT_add_entry(&table[0x08], (uint32_t)&__double_fault, DEF_CODE_SEL, GATE_INT); // Double Fault.
+	IDT_add_entry(&table[0x21], (uint32_t)&__irq_1, DEF_CODE_SEL, GATE_INT); // Keyboard Interrupt.
 	
 	//IDT_add_entry(&table[0x0D], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // General protection fault
 

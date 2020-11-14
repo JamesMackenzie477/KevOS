@@ -1,4 +1,4 @@
-#include "sys/pic.h"
+#include "pic.h"
 
 void pic_set_imr(uint32_t mask)
 {

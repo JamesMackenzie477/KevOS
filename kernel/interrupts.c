@@ -10,6 +10,12 @@ void def_int(void)
 	for (;;);
 }
 
+void double_fault(void)
+{
+	kprintf("double fault.\n");
+	for (;;);
+}
+
 void irq_1()
 {
 	// Calls the keyboard handler.
