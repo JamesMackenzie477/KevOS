@@ -8,22 +8,26 @@ SECTIONS
  
 	.text BLOCK(4K) : ALIGN(4K)
 	{
+		text_start = .;
 		*(.multiboot)
 		*(.text)
 	}
 
 	.rodata BLOCK(4K) : ALIGN(4K)
 	{
+		rodata_start = .;
 		*(.rodata)
 	}
  
 	.data BLOCK(4K) : ALIGN(4K)
 	{
+		data_start = .;
 		*(.data)
 	}
 
 	.bss BLOCK(4K) : ALIGN(4K)
 	{
+		bss_start = .;
 		*(COMMON)
 		*(.bss)
 	}

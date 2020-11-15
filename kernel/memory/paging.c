@@ -8,24 +8,24 @@ uint32_t * page_directory;
 /*
  * Maps the specified virtual address to the given physical address.
  */
-void paging_map_page(uint32_t virtual, uint32_t physical)
+void paging_map_page(uint32_t virtual, uint32_t physical, uint32_t flags)
 {
 	// Calculate the offset into the directory for the virtual address.
 	uint32_t dir_off = virtual / SIZE_OF_MEM_REGION;
 	// Calculates the offset into the page table.
 	uint32_t tab_off = (virtual % SIZE_OF_MEM_REGION) / PAGE_SIZE;
 	// Maps the physical page to the virtual one.
-	GET_PAGE_TABLE(page_directory[dir_off])[tab_off] = physical | 3;
+	GET_PAGE_TABLE(page_directory[dir_off])[tab_off] = physical | flags;
 }
 
 /*
  * Maps a whole table to a whole table size of memory.
  * The addresses must be 4 byte aligned.
  */
-void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count)
+void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count, uint32_t flags)
 {
 	// Maps n pages.
-	for(size_t i = 0; i < count; i++) paging_map_page(virtual + (i * PAGE_SIZE), physical + (i * PAGE_SIZE));
+	for(size_t i = 0; i < count; i++) paging_map_page(virtual + (i * PAGE_SIZE), physical + (i * PAGE_SIZE), flags);
 }
 
 /*
@@ -71,4 +71,6 @@ void paging_init(void)
 	// __enable_pae();
 	// Enables paging.
 	__enable_paging();
+
+	__write_cr0(__read_cr0() | (1 << 16));
 }
