@@ -1,5 +1,16 @@
 #include "string.h"
 
+// Compares two strings and returns the difference.
+size_t strcmp(const char * a, const char * b)
+{
+	while (*a && (*a == *b))
+	{
+		a++;
+		b++;
+	}
+	return *a - *b;
+}
+
 // Returns the length of the specified string.
 size_t strlen(const char * s)
 {

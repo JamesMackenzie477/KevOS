@@ -37,6 +37,9 @@ void GDT_init(void)
 	GDT_add_entry(&table[0], 	NULL, 	NULL, 		NULL, 			NULL);					// Null descriptor.
 	GDT_add_entry(&table[1], 	0x0, 	0xFFFFFFFF,	SEL_CODE, 	PAGE_GRAN | PROC_32);	// Code selector.
 	GDT_add_entry(&table[2], 	0x0, 	0xFFFFFFFF,	SEL_DATA, 	PAGE_GRAN | PROC_32); 	// Data selector.
+	// Task segment. Dummy segment.
+	// Multithreading.
+	// TAR ro filesystem.
 
 	// Sets the size of the GDT.
 	info.limit = sizeof(table) - 1;

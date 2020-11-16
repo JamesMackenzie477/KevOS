@@ -9,6 +9,7 @@ $HOME/opt/cross/bin/i686-elf-gcc -T ../linker.ld -o kevin.bin -ffreestanding -O2
 grub-file --is-x86-multiboot kevin.bin
 cp kevin.bin iso/boot/kevin.bin
 cp ../grub/grub.cfg iso/boot/grub/grub.cfg
+cp ../test.tar iso/boot/test.tar
 grub-mkrescue -o kevin.iso iso
 qemu-system-i386.exe -cdrom kevin.iso
 cd ..

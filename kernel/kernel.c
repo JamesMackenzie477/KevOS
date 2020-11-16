@@ -16,6 +16,8 @@ void kernel_main(MBINFO * mbinfo)
 	GDT_init(); IDT_init();
 	// Initialises the PIC and the APIC.
 	pic_init(); // apic_init();
+	// Initialises the file system.
+	fs_init();
 
 	kprintf(".text: 0x%x\n", 	&text_start);
 	kprintf(".rodata: 0x%x\n", 	&rodata_start);
@@ -31,6 +33,7 @@ void kernel_main(MBINFO * mbinfo)
 	paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
 
 	kprintf("KevinOS v0.0.1\n>");
+
 	// TODO
 	// Memory zones (look at linux implementation).
 	// Mapping page directory to itself (lecture slides).

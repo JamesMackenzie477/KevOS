@@ -25,5 +25,6 @@ char specifier_type(const char * s);
 size_t specifier_len(const char * s);
 char * format(char * r, const char * s, va_list args);
 void * memset(void * ptr, int value, size_t num);
+size_t strcmp(const char * a, const char * b);
 
 #endif

@@ -324,4 +324,7 @@ void keyboard_handler(void)
 		// Prints the scan code.
 		kprintf("%c", ascii);
 	}
+	// Create a new process?
+	// Store scan codes in a buffer ?
+	// align interrupts
 }
