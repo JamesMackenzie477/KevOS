@@ -15,6 +15,7 @@ static inline bool is_num(const char c)
 }
 
 // Declares the interface methods.
+uint32_t str_to_int(const char * str);
 size_t strlen(const char* s);
 size_t find(const char * s, char c);
 char * strncpy(char * dst, const char * src, size_t n);

@@ -8,8 +8,6 @@
 #include "IDT.h"
 #include "sys/apic.h"
 
-void test(void);
-
 // Used to validate the flags of the multiboot header.
 #define MMAP (1 << 6)
 #define VALIDATE_FLAGS(F) (F & MMAP)

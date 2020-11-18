@@ -1,5 +1,18 @@
 #include "string.h"
 
+uint32_t str_to_int(const char * str)
+{
+	// Stores the result.
+	uint32_t result = 0;
+	// Iterates through the string.
+	for (int i = 0; i < strlen(str); i++)
+	{
+		result = (str[i] - '0') + (result * 10);
+	}
+	// Returns the result.
+	return result;
+}
+
 // Compares two strings and returns the difference.
 size_t strcmp(const char * a, const char * b)
 {

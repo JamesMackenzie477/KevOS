@@ -19,11 +19,6 @@ void kernel_main(MBINFO * mbinfo)
 	// Initialises the file system.
 	fs_init();
 
-	kprintf(".text: 0x%x\n", 	&text_start);
-	kprintf(".rodata: 0x%x\n", 	&rodata_start);
-	kprintf(".data: 0x%x\n", 	&data_start);
-	kprintf(".bss: 0x%x\n", 	&bss_start);
-
 	// Maps the kernel to to it's default virtual address (Higher Half Kernel).
 	// paging_map_pages(KERNEL_MAPPING_ADDR, &kernel_start, 	MAX_PAGETABLE_ENTRIES, PAGE_PRESENT | PAGE_RW);
 	// Sets the pemissions for the kernel memory regions.
@@ -32,7 +27,11 @@ void kernel_main(MBINFO * mbinfo)
 	paging_map_page(&data_start, 	&data_start, 	PAGE_PRESENT | PAGE_RW);
 	paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
 
-	kprintf("KevinOS v0.0.1\n>");
+	kprintf("\nKevinOS v0.0.1\n%s>", fs_dir());
+
+	// scanf() ...
+	// if (cmd == "cd") ...
+	// fs_cd(dir) ...
 
 	// TODO
 	// Memory zones (look at linux implementation).
