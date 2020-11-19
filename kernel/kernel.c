@@ -27,7 +27,7 @@ void kernel_main(MBINFO * mbinfo)
 	paging_map_page(&data_start, 	&data_start, 	PAGE_PRESENT | PAGE_RW);
 	paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
 
-	kprintf("\nKevinOS v0.0.1\n%s>", fs_dir());
+	kprintf("\n%s>", fs_dir());
 
 	// scanf() ...
 	// if (cmd == "cd") ...

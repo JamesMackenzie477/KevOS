@@ -1,7 +1,7 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
-#include "../stdio.h"
+#include "stdio.h"
 #include "pfalloc.h"
 
 #define MAX_PAGETABLE_ENTRIES 	1024

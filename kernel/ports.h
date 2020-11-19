@@ -1,7 +1,7 @@
 #ifndef _PORTS_H
 #define _PORTS_H
 
-#include "../stdio.h"
+#include "stdio.h"
 
 /*
  * Allows interaction with processor ports via assembly functions. 

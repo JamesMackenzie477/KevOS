@@ -36,7 +36,7 @@ typedef struct _posix_header
 #define FILETYPE_DIRECTORY		'5'
 #define FILETYPE_FIFO_SPECIAL	'6'
 
-const char * fs_dir(void);
+char * fs_dir(void);
 void fs_init(void);
 
 #endif

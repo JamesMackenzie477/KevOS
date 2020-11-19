@@ -2,11 +2,12 @@
 #define _KERNEL_H
 
 #include "stdio.h"
-#include "memory/pfalloc.h"
-#include "memory/paging.h"
+#include "pfalloc.h"
+#include "paging.h"
 #include "GDT.h"
 #include "IDT.h"
-#include "sys/apic.h"
+#include "apic.h"
+#include "filesystem.h"
 
 // Used to validate the flags of the multiboot header.
 #define MMAP (1 << 6)

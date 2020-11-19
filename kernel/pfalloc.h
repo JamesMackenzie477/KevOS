@@ -1,7 +1,7 @@
 #ifndef _PFALLOC_H
 #define _PFALLOC_H
 
-#include "../stdio.h"
+#include "stdio.h"
 
 #define PAGE_SIZE 4096
 #define BYTE_SIZE 8

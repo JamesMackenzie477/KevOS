@@ -2,7 +2,7 @@
 #define _APIC_H
 
 #include <cpuid.h>
-#include "../stdio.h"
+#include "stdio.h"
 #include "pic.h"
 
 #define CPUID_APIC (1 << 9)

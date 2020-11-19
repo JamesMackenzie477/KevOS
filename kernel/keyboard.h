@@ -1,8 +1,8 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-#include "sys/ports.h"
-#include "sys/apic.h"
+#include "ports.h"
+#include "apic.h"
 
 #define IS_LETTER(sc) ((sc < 0x40) && (sc > 0xF))
 

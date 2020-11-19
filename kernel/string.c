@@ -1,5 +1,11 @@
 #include "string.h"
 
+char * strcat(char * dst, const char * src)
+{
+	strcpy(dst + strlen(dst), src);
+	return dst;
+}
+
 uint32_t str_to_int(const char * str)
 {
 	// Stores the result.
@@ -22,6 +28,17 @@ size_t strcmp(const char * a, const char * b)
 		b++;
 	}
 	return *a - *b;
+}
+
+// Compares two strings and returns the difference.
+size_t strncmp(const char * a, const char * b, size_t n)
+{
+	size_t i;
+	for (i = 0; i < n; i++)
+	{
+		if (!(a[i] && (a[i] == b[i]))) break;
+	}
+	return a[i] - b[i];
 }
 
 // Returns the length of the specified string.

@@ -3,7 +3,7 @@
 /**
  * Stores the current directory of the filesystem.
  */
-char * path[100];
+char path[100];
 
 /**
  * Stores the disk address.
@@ -110,16 +110,54 @@ posix_header * fs_get_file(const char * p)
 /**
  * Changes the current directory of the file system.
  */
-void fs_cd(const char * p)
+bool fs_cd(const char * p)
 {
+	// Stores the new path.
+	char new_path[100];
+	// Duplicates the current path.
+	strcpy(new_path, path);
+	// Appends the new directory.
+	strcat(new_path, p);
+	// Checks if the path is valid.
+	if (fs_check_path(new_path))
+	{
+		// Updates the current working path.
+		strcpy(path, new_path);
+		// Success.
+		return 1;
+	}
+	// Directory does not exist.
+	return 0;
 	// parses the string.
 	// root dir? change string.
 	// no root append to current string.
+	// Path does not exist.
 }
 
-const char * fs_dir(void)
+/**
+ * Prints the files in the current directory.
+ */
+void fs_ls(void)
 {
-	return "disk/";
+	// Iterates through the files in the disk.
+	for (uint32_t i = 0; disk_addr[i].name[0] != 0; i += fs_get_jump_size(&disk_addr[i]))
+	{
+		// Checks if it's a file.
+		if (disk_addr[i].typeflag == FILETYPE_REGULAR_FILE)
+		{
+			// If it's equal to the path then the directory exists.
+			if (strncmp(disk_addr[i].name, path, strlen(path) - 1) == 0)
+			{
+				// Prints the filename.
+				kprintf("%s\n", disk_addr[i].name);
+			}
+		}
+	}
+}
+
+char * fs_dir(void)
+{
+	return path;
 }
 
 /**
@@ -129,15 +167,10 @@ void fs_init(void)
 {
 	// Gets the address of the disk.
 	disk_addr = fs_get_disk_addr();
-	// Parses the disk.
-	kprintf("Drive content\n");
-	kprintf("-------------\n");
-	// Iterates through the files in the disk.
-	for (uint32_t i = 0; disk_addr[i].name[0] != 0; i += fs_get_jump_size(&disk_addr[i]))
-	{
-		// Prints the filename.
-		kprintf("%s\n", disk_addr[i].name);
-	}
+	// Sets the root directory.
+	fs_cd("disk/");
+	// Prints the files in the directory.
+	fs_ls();
 	// Is it an elf 64?
 	// Lets link to our kernel methods.
 	// Use an image loader to parse the elf64 binary and then map out any function calls.

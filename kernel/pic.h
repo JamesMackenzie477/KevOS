@@ -1,7 +1,7 @@
 #ifndef _PIC_H
 #define _PIC_H
 
-#include "../stdio.h"
+#include "stdio.h"
 #include "ports.h"
 
 
