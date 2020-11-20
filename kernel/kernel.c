@@ -27,7 +27,11 @@ void kernel_main(MBINFO * mbinfo)
 	paging_map_page(&data_start, 	&data_start, 	PAGE_PRESENT | PAGE_RW);
 	paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
 
-	kprintf("\n%s>", fs_dir());
+	kprintf("%s>ls\n", fs_dir());
+	// Prints the files in the directory.
+	fs_ls();
+
+	kprintf("%s>", fs_dir());
 
 	// scanf() ...
 	// if (cmd == "cd") ...

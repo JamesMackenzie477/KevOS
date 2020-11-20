@@ -1,5 +1,48 @@
 #include "string.h"
 
+char * strtok_ptr = NULL;
+
+bool strfind(const char * s, const char e)
+{
+	for (size_t i = 0; i < strlen(s); i++)
+	{
+		if (e == s[i]) return 1;
+	}
+	return 0;
+}
+
+char * strtok(char * s, const char * del)
+{
+	size_t i;
+
+	bool found = 0;
+
+	// if s is null then we cotinue breaking apart the string.
+	if (s != NULL) strtok_ptr = s;
+
+	if (strtok_ptr != NULL)
+	{
+
+		for (i = 0; i < strlen(strtok_ptr); i++)
+		{
+			if (strfind(del, strtok_ptr[i]))
+			{
+				strtok_ptr[i] = NULL;
+				found = 1;
+				break;
+			}
+		}
+
+	}
+
+	s = strtok_ptr;
+
+	if (!found) strtok_ptr = NULL;
+	else strtok_ptr += i + 1;
+
+	return s;
+}
+
 char * strcat(char * dst, const char * src)
 {
 	strcpy(dst + strlen(dst), src);

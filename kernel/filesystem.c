@@ -135,10 +135,35 @@ bool fs_cd(const char * p)
 }
 
 /**
+ * Extracts a filename from the gievn path.
+ */
+char * fs_filename(char * dst, const char * p)
+{
+	// Stores the current string pointer and the previous.
+	char * res, * prev = NULL;
+	// Duplicates the string as it's modified by strtok.
+	strcpy(dst, p);
+	// Gets the first directory from the path.
+	res = strtok(dst, "/");
+	// While there's still more depth to the path.
+	while (res != NULL)
+	{
+		// Store the previous result (the filename) so it isn't lost when NULL is returned.
+		prev = res;
+		// Gets the next part of the path.
+		res = strtok(NULL, "/");
+	}
+	// Returns the filename or NULL if it isn't found.
+	return prev;
+}
+
+/**
  * Prints the files in the current directory.
  */
 void fs_ls(void)
 {
+	// Stores the filename when requesting each file.
+	char filename[100];
 	// Iterates through the files in the disk.
 	for (uint32_t i = 0; disk_addr[i].name[0] != 0; i += fs_get_jump_size(&disk_addr[i]))
 	{
@@ -149,7 +174,7 @@ void fs_ls(void)
 			if (strncmp(disk_addr[i].name, path, strlen(path) - 1) == 0)
 			{
 				// Prints the filename.
-				kprintf("%s\n", disk_addr[i].name);
+				kprintf("%s\n", fs_filename(&filename, disk_addr[i].name));
 			}
 		}
 	}
@@ -169,8 +194,6 @@ void fs_init(void)
 	disk_addr = fs_get_disk_addr();
 	// Sets the root directory.
 	fs_cd("disk/");
-	// Prints the files in the directory.
-	fs_ls();
 	// Is it an elf 64?
 	// Lets link to our kernel methods.
 	// Use an image loader to parse the elf64 binary and then map out any function calls.
