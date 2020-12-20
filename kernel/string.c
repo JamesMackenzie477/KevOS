@@ -49,14 +49,14 @@ char * strcat(char * dst, const char * src)
 	return dst;
 }
 
-uint32_t str_to_int(const char * str)
+uint32_t str_to_int(const char * str, uint32_t base)
 {
 	// Stores the result.
 	uint32_t result = 0;
 	// Iterates through the string.
 	for (int i = 0; i < strlen(str); i++)
 	{
-		result = (str[i] - '0') + (result * 10);
+		result = (str[i] - '0') + (result * base);
 	}
 	// Returns the result.
 	return result;

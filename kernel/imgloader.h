@@ -27,21 +27,6 @@ typedef struct _posix_header
 	char padding[12];
 } __attribute__((packed)) posix_header;
 
-/**
- * Defines file types.
- */
-#define FILETYPE_REGULAR_FILE 	'0'
-#define FILETYPE_LINKED_FILE 	'1'
-#define FILETYPE_SYMBOLIC_LINK 	'2'
-#define FILETYPE_DIRECTORY		'5'
-#define FILETYPE_FIFO_SPECIAL	'6'
-
-extern uint32_t disk_start;
-
-char * fs_dir(void);
-void fs_init(void);
-void fs_ls(void);
-bool fs_cd(const char * p);
-posix_header * fs_get_file(const char *);
+// const char elf[] = { 0x7F, 'E', 'L', 'F' };
 
 #endif

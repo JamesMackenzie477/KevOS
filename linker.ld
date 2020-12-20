@@ -17,6 +17,8 @@ SECTIONS
 	{
 		rodata_start = .;
 		*(.rodata)
+		disk_start = .;
+		*(.disk)
 	}
  
 	.data BLOCK(4K) : ALIGN(4K)

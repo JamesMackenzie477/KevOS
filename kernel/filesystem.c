@@ -18,7 +18,7 @@ posix_header * disk_addr;
 posix_header * fs_get_disk_addr(void)
 {
 	// Stores the disk address.
-	char * disk_addr;
+	char * disk_addr; 
 	// Find the disk in memory.
 	for (disk_addr = 0; disk_addr < 0x100000; disk_addr++)
 	{
@@ -45,12 +45,12 @@ posix_header * fs_get_disk_addr(void)
 inline uint32_t fs_get_jump_size(posix_header * h)
 {
 	// Gets the size of the file.
-	uint32_t file_size, size = str_to_int(h->size);
+	uint32_t file_size, size = str_to_int(h->size, 8);
 	// Checks the filetype.
 	if (h->typeflag == FILETYPE_REGULAR_FILE)
 	{
 		// Calculates the file block size.
-		file_size = (size / sizeof(posix_header)) + (size < sizeof(posix_header));
+		file_size = (size / sizeof(posix_header)) + ((size % sizeof(posix_header)) > 0);
 		// Jumps over the file.
 		return 1 + file_size;
 	}
@@ -191,7 +191,7 @@ char * fs_dir(void)
 void fs_init(void)
 {
 	// Gets the address of the disk.
-	disk_addr = fs_get_disk_addr();
+	disk_addr = &disk_start;
 	// Sets the root directory.
 	fs_cd("disk/");
 	// Is it an elf 64?

@@ -33,6 +33,9 @@ void kernel_main(MBINFO * mbinfo)
 
 	kprintf("%s>", fs_dir());
 
+	// Attempts to load a driver.
+	// load_elf64(fs_get_file("disk/keyboard.o"));
+
 	// scanf() ...
 	// if (cmd == "cd") ...
 	// fs_cd(dir) ...
