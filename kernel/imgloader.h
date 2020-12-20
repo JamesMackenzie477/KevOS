@@ -27,6 +27,56 @@ typedef struct _posix_header
 	char padding[12];
 } __attribute__((packed)) posix_header;
 
-// const char elf[] = { 0x7F, 'E', 'L', 'F' };
+/**
+ * Defines the elf file header.
+ */
+typedef struct _elf_header
+{
+	uint32_t magic;
+	uint8_t class;
+	uint8_t data;
+	uint8_t version;
+	uint8_t osabi;
+	uint8_t abiver;
+	uint8_t pad[7];
+	uint16_t type;
+	uint16_t machine;
+	uint32_t ver;
+	uint32_t entry; // entry point of the binary. Lets call it!
+	uint32_t phoff;
+	uint32_t shoff;
+	uint32_t flags;
+	uint16_t ehsize;
+	uint16_t phentsize;
+	uint16_t phnum;
+	uint16_t shentsize;
+	uint16_t shnum;
+	uint16_t shstrndx;
+} __attribute__((packed)) elf_header;
+
+/**
+ * Defines the elf section header.
+ */
+typedef struct _section_header
+{
+	uint32_t name;
+	uint32_t type;
+	uint32_t flags;
+	uint32_t addr;
+	uint32_t offset;
+
+	uint32_t flags3;
+	uint32_t flags4;
+	uint32_t flags5;
+	uint32_t flags6;
+	uint32_t flags7;
+} __attribute__((packed)) section_header;
+
+/**
+ * Defines the magic number for ELF files.
+ */
+#define IL_ELF_MAGIC 0x464C457F
+
+uintptr_t il_load_elf64(posix_header *);
 
 #endif

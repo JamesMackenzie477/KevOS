@@ -11,33 +11,6 @@ char path[100];
 posix_header * disk_addr;
 
 /**
- * Finds the address of the disk in RAM.
- * This is a work in progress and probably shouldn't be done like this.
- * @return A pointer to the disk mapped in memory.
- */
-posix_header * fs_get_disk_addr(void)
-{
-	// Stores the disk address.
-	char * disk_addr; 
-	// Find the disk in memory.
-	for (disk_addr = 0; disk_addr < 0x100000; disk_addr++)
-	{
-		// Indicator of the disk.
-		if (strcmp(disk_addr, "disk/") == 0)
-		{
-			// Actual mapping is aligned to 0x100 bytes.
-			if (((((uintptr_t)disk_addr) % 0x100) == 0))
-			{
-				// Returns the address.
-				return (posix_header *)disk_addr;
-			}
-		}
-	}
-	// Returns 0 if no disk is found.
-	return (posix_header *)0;
-}
-
-/**
  * Returns the amount of blocks between this header and the next.
  * @param h The header of the item to calculate the block size for.
  * @return The number of blocks to jump to get to the next header.
@@ -135,7 +108,7 @@ bool fs_cd(const char * p)
 }
 
 /**
- * Extracts a filename from the gievn path.
+ * Extracts a filename from the given path.
  */
 char * fs_filename(char * dst, const char * p)
 {
@@ -194,8 +167,4 @@ void fs_init(void)
 	disk_addr = &disk_start;
 	// Sets the root directory.
 	fs_cd("disk/");
-	// Is it an elf 64?
-	// Lets link to our kernel methods.
-	// Use an image loader to parse the elf64 binary and then map out any function calls.
-	// Rebase image?
 }

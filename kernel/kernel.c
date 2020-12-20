@@ -27,14 +27,19 @@ void kernel_main(MBINFO * mbinfo)
 	paging_map_page(&data_start, 	&data_start, 	PAGE_PRESENT | PAGE_RW);
 	paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
 
-	kprintf("%s>ls\n", fs_dir());
+	// kprintf("%s>ls\n", fs_dir());
+	// kprintf("%s>", fs_dir());
+
 	// Prints the files in the directory.
+	kprintf("Files:\n");
 	fs_ls();
 
-	kprintf("%s>", fs_dir());
-
-	// Attempts to load a driver.
-	// load_elf64(fs_get_file("disk/keyboard.o"));
+	kprintf("\nLoading %s module...\n", "disk/keyboard.o");
+	// Attempts to load a program.
+	/*il_prog img =*/uintptr_t img = il_load_elf64(fs_get_file("disk/keyboard.o"));
+	// Calls the entry point of the program.
+	// il_call_entry(img);
+	if (img) kprintf("Sucessfully loaded %s.\n", "disk/keyboard.o");
 
 	// scanf() ...
 	// if (cmd == "cd") ...
@@ -46,6 +51,7 @@ void kernel_main(MBINFO * mbinfo)
 	// Add constants
 	// ne2000
 	// PCI
+
 	// Ensures we remain within this function.
 	for (;;);
 }
