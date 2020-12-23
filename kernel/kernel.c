@@ -22,10 +22,10 @@ void kernel_main(MBINFO * mbinfo)
 	// Maps the kernel to to it's default virtual address (Higher Half Kernel).
 	// paging_map_pages(KERNEL_MAPPING_ADDR, &kernel_start, 	MAX_PAGETABLE_ENTRIES, PAGE_PRESENT | PAGE_RW);
 	// Sets the pemissions for the kernel memory regions.
-	paging_map_page(&text_start, 	&text_start, 	PAGE_PRESENT);
-	paging_map_page(&rodata_start, 	&rodata_start, 	PAGE_PRESENT);
-	paging_map_page(&data_start, 	&data_start, 	PAGE_PRESENT | PAGE_RW);
-	paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
+	//paging_map_page(&text_start, 	&text_start, 	PAGE_PRESENT);
+	//paging_map_page(&rodata_start, 	&rodata_start, 	PAGE_PRESENT);
+	//paging_map_page(&data_start, 	&data_start, 	PAGE_PRESENT | PAGE_RW);
+	//paging_map_page(&bss_start, 	&bss_start, 	PAGE_PRESENT | PAGE_RW);
 
 	// kprintf("%s>ls\n", fs_dir());
 	// kprintf("%s>", fs_dir());
@@ -34,12 +34,12 @@ void kernel_main(MBINFO * mbinfo)
 	kprintf("Files:\n");
 	fs_ls();
 
-	kprintf("\nLoading %s module...\n", "disk/keyboard.o");
+	kprintf("\nExecuting %s...\n", "disk/test.bin");
 	// Attempts to load a program.
-	/*il_prog img =*/uintptr_t img = il_load_elf64(fs_get_file("disk/keyboard.o"));
+	/*il_prog img =*/uintptr_t img = il_load_elf64(fs_get_file("disk/test.bin"));
 	// Calls the entry point of the program.
 	// il_call_entry(img);
-	if (img) kprintf("Sucessfully loaded %s.\n", "disk/keyboard.o");
+	if (img) kprintf("Finished executing %s.\n", "disk/test.bin");
 
 	// scanf() ...
 	// if (cmd == "cd") ...

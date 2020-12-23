@@ -32,6 +32,7 @@ extern void __write_cr0(uint32_t);
  */
 
 void paging_init(void);
+uint32_t paging_virtual_to_physical(uint32_t virtual);
 void paging_map_page(uint32_t virtual, uint32_t physical, uint32_t flags);
 void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count, uint32_t flags);
 

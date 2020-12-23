@@ -2,6 +2,7 @@
 #define _FILESYSTEM_H
 
 #include "stdio.h"
+#include "paging.h"
 
 /**
  * Defines the tar file header.
@@ -55,6 +56,22 @@ typedef struct _elf_header
 } __attribute__((packed)) elf_header;
 
 /**
+ * Defines the elf program header.
+ */
+typedef struct _program_header
+{
+	uint32_t type;
+	uint32_t offset;
+	uint32_t vaddr;
+	uint32_t paddr;
+	uint32_t filesz;
+	uint32_t flags5;
+	uint32_t flags6;
+	uint32_t flags7;
+} __attribute__((packed)) program_header;
+
+
+/**
  * Defines the elf section header.
  */
 typedef struct _section_header
@@ -77,6 +94,18 @@ typedef struct _section_header
  */
 #define IL_ELF_MAGIC 0x464C457F
 
-uintptr_t il_load_elf64(posix_header *);
+/**
+ * Defines the default base for the program.
+ */
+#define IL_DEF_BASE 0x1000
+
+#define PT_LOAD 0x1
+
+/**
+ * Defines the main entry point of the drivers.
+ */
+typedef const char * (*entry_t)();
+
+uint32_t * il_load_elf64(posix_header *);
 
 #endif

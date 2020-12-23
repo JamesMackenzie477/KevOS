@@ -6,16 +6,37 @@
 uint32_t * page_directory;
 
 /*
- * Maps the specified virtual address to the given physical address.
+ * Returns the physical address for the corrosponding virtual.
  */
-void paging_map_page(uint32_t virtual, uint32_t physical, uint32_t flags)
+uint32_t paging_virtual_to_physical(uint32_t virtual)
 {
 	// Calculate the offset into the directory for the virtual address.
 	uint32_t dir_off = virtual / SIZE_OF_MEM_REGION;
 	// Calculates the offset into the page table.
 	uint32_t tab_off = (virtual % SIZE_OF_MEM_REGION) / PAGE_SIZE;
+	// WIP...
+	uint32_t rem = (virtual % SIZE_OF_MEM_REGION) % PAGE_SIZE;
 	// Maps the physical page to the virtual one.
-	GET_PAGE_TABLE(page_directory[dir_off])[tab_off] = physical | flags;
+	return (GET_PAGE_TABLE(page_directory[dir_off])[tab_off] & 0xFFFFFF00) + rem;
+}
+
+/*
+ * Maps the specified virtual address to the given physical address.
+ */
+void paging_map_page(uint32_t virtual, uint32_t physical, uint32_t flags)
+{
+	// Checks if the addresses are 4KB aligned.
+	if (((virtual % PAGE_SIZE) == 0) && ((physical % PAGE_SIZE) == 0))
+	{
+		// Calculate the offset into the directory for the virtual address.
+		uint32_t dir_off = virtual / SIZE_OF_MEM_REGION;
+		// Calculates the offset into the page table.
+		uint32_t tab_off = (virtual % SIZE_OF_MEM_REGION) / PAGE_SIZE;
+		// WIP...
+		uint32_t rem = (virtual % SIZE_OF_MEM_REGION) % PAGE_SIZE;
+		// Maps the physical page to the virtual one.
+		GET_PAGE_TABLE(page_directory[dir_off])[tab_off] = (physical - rem) | flags;
+	}
 }
 
 /*
@@ -44,6 +65,8 @@ static void paging_init_directory(void)
 	// Stores a pointer to the current table.
 	uint32_t * table;
 	// Iterates through the entries in the page table.
+	// We should only initialise the kernel area and then
+	// add other areas when we allocate the memory. To save space!
 	for (size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++)
 	{
 		// Allocates the table.
