@@ -1,6 +1,10 @@
 #include "test.h"
 
-const char * __start(void)
+/**
+ * Main entry point of the program.
+ */
+int __start(void)
 {
-	return "Hello World";
+	// Prints a string to the screen.
+	__printf("Hello world!\nThis is a test program...\n");
 }

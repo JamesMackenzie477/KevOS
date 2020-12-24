@@ -4,10 +4,9 @@
  * This is the default interrupt.
  * Can be used as a placeholder.
  */
-void def_int(void)
+void printf(const char * str)
 {
-	kprintf("default interrupt triggered.\n");
-	for (;;);
+	kprintf("%s", str);
 }
 
 void double_fault(void)

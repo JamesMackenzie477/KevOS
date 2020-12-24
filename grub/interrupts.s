@@ -18,12 +18,14 @@ __\f:
 	cli
 	pusha
 	push %ds
+	push %eax
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
 	mov %ax, %fs
 	mov %ax, %gs
 	call \f
+	pop %eax
 	pop %ds
 	popa
 	sti
@@ -61,4 +63,4 @@ __sti:
 
 irtn irq_1
 irtn double_fault
-irtn def_int
+irtn printf

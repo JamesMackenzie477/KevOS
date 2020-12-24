@@ -38,6 +38,8 @@ void IDT_init(void)
 	
 	//IDT_add_entry(&table[0x0D], (uint32_t)&__def_int, DEF_CODE_SEL, GATE_INT); // General protection fault
 
+	IDT_add_entry(&table[0xFF], (uint32_t)&__printf, DEF_CODE_SEL, GATE_INT);
+
 	// Sets the size of the IDT.
 	info.limit = sizeof(table) - 1;
 	// Sets the linear address of the IDT.
