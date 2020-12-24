@@ -1,6 +1,6 @@
 #ifndef _TEST_H
 #define _TEST_H
 
-#include "kevin.h"
+#include "../kevin.h"
 
 #endif
