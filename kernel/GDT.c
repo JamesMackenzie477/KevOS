@@ -35,8 +35,15 @@ void GDT_init(void)
 	// Adds the default entries to the GDT.
 	
 	GDT_add_entry(&table[0], 	NULL, 	NULL, 		NULL, 			NULL);					// Null descriptor.
-	GDT_add_entry(&table[1], 	0x0, 	0xFFFFFFFF,	SEL_CODE, 	PAGE_GRAN | PROC_32);	// Code selector.
-	GDT_add_entry(&table[2], 	0x0, 	0xFFFFFFFF,	SEL_DATA, 	PAGE_GRAN | PROC_32); 	// Data selector.
+
+	// Kernel mode.
+	GDT_add_entry(&table[1], 	0x0, 	0xFFFFFFFF,	SEL_CODE, 		GDT_PAGE_GRAN | GDT_PROC_32);	// Code selector.
+	GDT_add_entry(&table[2], 	0x0, 	0xFFFFFFFF,	SEL_DATA, 		GDT_PAGE_GRAN | GDT_PROC_32); 	// Data selector.
+
+	// User mode.
+	GDT_add_entry(&table[3], 	0x0, 	0xFFFFFFFF,	SEL_USER_CODE, 	GDT_AVAIL | GDT_PAGE_GRAN | GDT_PROC_32);	// User code selector.
+	GDT_add_entry(&table[4], 	0x0, 	0xFFFFFFFF,	SEL_USER_DATA, 	GDT_AVAIL | GDT_PAGE_GRAN | GDT_PROC_32); 	// User data selector.
+
 	// Task segment. Dummy segment.
 	// Multithreading.
 	// TAR ro filesystem.

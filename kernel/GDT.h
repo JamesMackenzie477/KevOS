@@ -10,12 +10,16 @@
 #define SEL_CODE 0x9A
 #define SEL_DATA 0x92
 
+#define SEL_USER_CODE 0xFA
+#define SEL_USER_DATA 0xF2
+
 /*
  * Defines the flags for a GDT entry.
  */
 
-#define PAGE_GRAN	8
-#define PROC_32		4
+#define GDT_AVAIL		1
+#define GDT_PAGE_GRAN	8
+#define GDT_PROC_32		4
 
 /*
  * Allows for a simple concatenation of the high limit and flags. 
