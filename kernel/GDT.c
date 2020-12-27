@@ -8,7 +8,17 @@ static GDT_INFO info;
 /*
  * The static Global Descriptor Table.
  */
-static GDT_ENTRY table[3];
+static GDT_ENTRY table[6];
+
+/*
+ * The task state segment.
+ */
+static TSS_ENTRY tss;
+
+/*
+ * Kernel Stack.
+ */
+static uint32_t stack[4096];
 
 /*
  * Encodes an entry for the Global Descriptor Table.
@@ -44,9 +54,11 @@ void GDT_init(void)
 	GDT_add_entry(&table[3], 	0x0, 	0xFFFFFFFF,	SEL_USER_CODE, 	GDT_AVAIL | GDT_PAGE_GRAN | GDT_PROC_32);	// User code selector.
 	GDT_add_entry(&table[4], 	0x0, 	0xFFFFFFFF,	SEL_USER_DATA, 	GDT_AVAIL | GDT_PAGE_GRAN | GDT_PROC_32); 	// User data selector.
 
-	// Task segment. Dummy segment.
 	// Multithreading.
-	// TAR ro filesystem.
+
+	// CMD is a usermode task
+	// Launch it at start up and then use interrupts to interact with the kernel.
+	// Programs get their own stack.
 
 	// Sets the size of the GDT.
 	info.limit = sizeof(table) - 1;
@@ -56,4 +68,11 @@ void GDT_init(void)
 	__set_GDT(&info);
 	// Reloads the segment registers.
 	__reload_seg_regs();
+
+	// Task state segment.
+	memset(&tss, 0, sizeof(tss));
+	tss.ss0	= SEL_KER_DATA_ID; // Kernel data selector.
+	tss.esp0 = &stack;
+	GDT_add_entry(&table[5], &tss, sizeof(tss), SEL_TSS, NULL);
+	__tss_flush();
 }

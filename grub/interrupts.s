@@ -4,11 +4,13 @@
 .global __reload_seg_regs
 .global __set_IDT
 .global __sti
+.global __tss_flush
 
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
 .type __set_IDT, @function
 .type __sti, @function
+.type __tss_flush, @function
 
 // Macro to define interrupt routines.
 .macro irtn f
@@ -56,6 +58,11 @@ __set_IDT:
 __sti:
 	sti
 	ret
+
+__tss_flush:
+   mov $0x2B, %ax
+   ltr %ax
+   ret
 
 /*
  * Assembly wrappers for all of the interrupt handlers.
