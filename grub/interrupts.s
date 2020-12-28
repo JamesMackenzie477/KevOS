@@ -5,12 +5,14 @@
 .global __set_IDT
 .global __sti
 .global __tss_flush
+.global __r3_execute
 
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
 .type __set_IDT, @function
 .type __sti, @function
 .type __tss_flush, @function
+.type __r3_execute, @function
 
 // Macro to define interrupt routines.
 .macro irtn f
@@ -63,6 +65,23 @@ __tss_flush:
    mov $0x2B, %ax
    ltr %ax
    ret
+
+__r3_execute:
+	mov $0x23, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %esp, %eax
+	push $0x23
+	push %eax
+	pushf
+	push $0x1B
+	push $test_func
+	iret
+
+__tst:
+	jmp __tst
 
 /*
  * Assembly wrappers for all of the interrupt handlers.

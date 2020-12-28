@@ -13,4 +13,19 @@ IRTN(void, irq_1, __irq_1, void)
 IRTN(void, double_fault, __double_fault, void)
 IRTN(void, printf, __printf, const char *)
 
+extern void int0(void);
+
+void interrupt_handler(
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t,
+	uint32_t
+	);
+
 #endif
