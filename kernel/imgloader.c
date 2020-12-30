@@ -101,11 +101,17 @@ uint32_t * il_load_elf64(posix_header * f)
 	// Calls the entry point.
 	kprintf("Calling entry...\n\n");
 	// Sets the virtual base to point to the allocated program in memory.
-	// paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_PRESENT | PAGE_RW);
+	paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_PRESENT | PAGE_RW);
 	// Executes the program in ring 3.
 	__r3_execute(test_func);
+
+	// STILL IN USER MODE...
+	// LETS SWITCH BACK!
+
+	for (;;);
+
 	// Switch to kernel paging dir when we come back. 
-	// paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
+	paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
 	// Deallocate program memory.
 
 	return pbase;

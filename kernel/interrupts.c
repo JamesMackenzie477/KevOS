@@ -37,5 +37,5 @@ void interrupt_handler(
 	uint32_t err)
 {
 	kprintf("Exception triggered: 0x%x\n", irq);
-	if (irq == 0x8) for (;;);
+	//for (;;);
 }

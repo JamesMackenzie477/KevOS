@@ -47,17 +47,22 @@ void GDT_init(void)
 	GDT_add_entry(&table[0], 	NULL, 	NULL, 		NULL, 			NULL);					// Null descriptor.
 
 	// Kernel mode.
-	GDT_add_entry(&table[1], 	0x0, 	0xFFFFFFFF,	SEL_CODE, 		GDT_PAGE_GRAN | GDT_PROC_32);	// Code selector.
-	GDT_add_entry(&table[2], 	0x0, 	0xFFFFFFFF,	SEL_DATA, 		GDT_PAGE_GRAN | GDT_PROC_32); 	// Data selector.
+	GDT_add_entry(&table[1], 	0x0, 	0xFFFFFFFF,	SEL_KER_CODE, 	GDT_PAGE_GRAN | GDT_PROC_32);	// Code selector.
+	GDT_add_entry(&table[2], 	0x0, 	0xFFFFFFFF,	SEL_KER_DATA, 	GDT_PAGE_GRAN | GDT_PROC_32); 	// Data selector.
 
 	// User mode.
-	GDT_add_entry(&table[3], 	0x0, 	0xFFFFFFFF,	SEL_USER_CODE, 	GDT_AVAIL | GDT_PAGE_GRAN | GDT_PROC_32);	// User code selector.
-	GDT_add_entry(&table[4], 	0x0, 	0xFFFFFFFF,	SEL_USER_DATA, 	GDT_AVAIL | GDT_PAGE_GRAN | GDT_PROC_32); 	// User data selector.
+	GDT_add_entry(&table[3], 	0x0, 	0xFFFFFFFF,	SEL_USR_CODE, 	GDT_PAGE_GRAN | GDT_PROC_32);	// User code selector.
+	GDT_add_entry(&table[4], 	0x0, 	0xFFFFFFFF,	SEL_USR_DATA, 	GDT_PAGE_GRAN | GDT_PROC_32); 	// User data selector.
 
 	// Task state segment.
 	memset(&tss, 0, sizeof(tss));
+
 	tss.ss0	= SEL_KER_DATA_ID; // Kernel data selector.
-	tss.esp0 = &stack;
+	tss.esp0 = NULL;
+
+	// tss.cs = 0x0b;
+	// tss.ss = tss.ds = tss.es = tss.fs = tss.gs = 0x13;
+
 	GDT_add_entry(&table[5], &tss, sizeof(tss), SEL_TSS, NULL);
 
 	// Multithreading.

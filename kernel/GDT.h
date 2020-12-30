@@ -7,11 +7,11 @@
  * Defines the access byte options for a GDT entry.
  */
 
-#define SEL_CODE 0x9A
-#define SEL_DATA 0x92
+#define SEL_KER_CODE 0x9A
+#define SEL_KER_DATA 0x92
 
-#define SEL_USER_CODE 0xFA
-#define SEL_USER_DATA 0xF2
+#define SEL_USR_CODE 0xFA
+#define SEL_USR_DATA 0xF2
 
 #define SEL_TSS 0x89
 

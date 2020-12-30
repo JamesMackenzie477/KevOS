@@ -77,7 +77,7 @@ __r3_execute:
 	push %eax
 	pushf
 	push $0x1B
-	push $test_func
+	push 4(%eax)
 	iret
 
 __tst:
