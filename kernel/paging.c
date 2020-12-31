@@ -54,7 +54,7 @@ void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count, uint32_
  */
 static void paging_init_table(uint32_t * page_table, uint32_t physical)
 {
-	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 3;
+	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 7;
 }
 
 /*
@@ -74,7 +74,7 @@ static void paging_init_directory(void)
 		// Defaults the entries.
 		paging_init_table(table, i * SIZE_OF_MEM_REGION);
 		// Adds the page table to the page directory.
-		page_directory[i] = (uint32_t)table | 3;
+		page_directory[i] = (uint32_t)table | 7;
 	}
 }
 

@@ -101,14 +101,17 @@ uint32_t * il_load_elf64(posix_header * f)
 	// Calls the entry point.
 	kprintf("Calling entry...\n\n");
 	// Sets the virtual base to point to the allocated program in memory.
-	paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_PRESENT | PAGE_RW);
+	// Also makes it a user page because we need to access it in user mode.
+	paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_USER | PAGE_PRESENT | PAGE_RW);
+
+	// Maps the test_func to usermode memory.
 	// Executes the program in ring 3.
-	__r3_execute(test_func);
+	uint32_t res = __r3_execute(pfile->entry);
+
+	kprintf("\nProgram returned: 0x%x\n", res);
 
 	// STILL IN USER MODE...
 	// LETS SWITCH BACK!
-
-	for (;;);
 
 	// Switch to kernel paging dir when we come back. 
 	paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
@@ -117,7 +120,8 @@ uint32_t * il_load_elf64(posix_header * f)
 	return pbase;
 }
 
-void test_func(void)
+uint32_t test_prog(void)
 {
-	for (;;);
+	kprintf("HELLO MAN...\n");
+	return 1;
 }

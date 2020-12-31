@@ -60,8 +60,8 @@ void GDT_init(void)
 	tss.ss0	= SEL_KER_DATA_ID; // Kernel data selector.
 	tss.esp0 = NULL;
 
-	// tss.cs = 0x0b;
-	// tss.ss = tss.ds = tss.es = tss.fs = tss.gs = 0x13;
+	tss.cs = 0x0b;
+	tss.ss = tss.ds = tss.es = tss.fs = tss.gs = 0x13;
 
 	GDT_add_entry(&table[5], &tss, sizeof(tss), SEL_TSS, NULL);
 
