@@ -20,6 +20,12 @@ static TSS_ENTRY tss;
  */
 static uint32_t stack[4096];
 
+void syscall(void)
+{
+	kprintf("SYSCALL...");
+	for (;;);
+}
+
 /*
  * Encodes an entry for the Global Descriptor Table.
  */
@@ -58,10 +64,10 @@ void GDT_init(void)
 	memset(&tss, 0, sizeof(tss));
 
 	tss.ss0	= SEL_KER_DATA_ID; // Kernel data selector.
-	tss.esp0 = NULL;
+	tss.esp0 = &stack;
 
-	tss.cs = 0x0b;
-	tss.ss = tss.ds = tss.es = tss.fs = tss.gs = 0x13;
+	//tss.cs = 0x0b;
+	//tss.ss = tss.ds = tss.es = tss.fs = tss.gs = 0x13;
 
 	GDT_add_entry(&table[5], &tss, sizeof(tss), SEL_TSS, NULL);
 
@@ -71,7 +77,13 @@ void GDT_init(void)
 	// Launch it at start up and then use interrupts to interact with the kernel.
 	// Programs get their own stack.
 	// Programs get their own page table with the kernel mapped into memory.
-	// sysenter
+
+	// Sets the parameters for sysenter.
+	//__write_msr(IA32_SYSENTER_CS, 	0x8, NULL);
+	//__write_msr(IA32_SYSENTER_ESP,	(uint32_t)&stack, NULL);
+	//__write_msr(IA32_SYSENTER_EIP,	(uint32_t)&syscall, NULL);
+
+	// kprintf("Interrupts Enabled: %d\n", (__read_eflags() >> 9) & 1);
 
 	// Sets the size of the GDT.
 	info.limit = sizeof(table) - 1;

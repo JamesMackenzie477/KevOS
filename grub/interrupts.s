@@ -6,6 +6,7 @@
 .global __sti
 .global __tss_flush
 .global __r3_execute
+.global __read_eflags
 
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
@@ -13,6 +14,7 @@
 .type __sti, @function
 .type __tss_flush, @function
 .type __r3_execute, @function
+.type __read_eflags, @function
 
 // Macro to define interrupt routines.
 .macro irtn f
@@ -80,8 +82,10 @@ __r3_execute:
 	push 4(%eax)
 	iret
 
-__tst:
-	jmp __tst
+__read_eflags:
+	pushf
+	pop %eax
+	ret
 
 /*
  * Assembly wrappers for all of the interrupt handlers.

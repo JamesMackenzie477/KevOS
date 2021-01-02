@@ -34,6 +34,12 @@ void paging_map_page(uint32_t virtual, uint32_t physical, uint32_t flags)
 		uint32_t tab_off = (virtual % SIZE_OF_MEM_REGION) / PAGE_SIZE;
 		// WIP...
 		uint32_t rem = (virtual % SIZE_OF_MEM_REGION) % PAGE_SIZE;
+
+		// TEMP FIX TO CHANGE DIRECTORY TO USER ONE.
+		// Really we should have multiple directories allocated to user more and use these.
+		// Maybe a program would use one directory, etc.
+		if (flags & PAGE_USER) page_directory[dir_off] |= PAGE_USER;
+
 		// Maps the physical page to the virtual one.
 		GET_PAGE_TABLE(page_directory[dir_off])[tab_off] = (physical - rem) | flags;
 	}

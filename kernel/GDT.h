@@ -2,6 +2,7 @@
 #define _GDT_H
 
 #include "stdio.h"
+#include "msrs.h"
 
 /*
  * Defines the access byte options for a GDT entry.
@@ -96,6 +97,7 @@ typedef struct _TSS_ENTRY
 extern void __set_GDT(GDT_INFO *);
 extern void __reload_seg_regs(void);
 extern void __tss_flush(void);
+extern uint32_t __read_eflags(void);
 
 /*
  * Enables the kernel to interact with the Global Descriptor Table.

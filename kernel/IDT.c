@@ -25,7 +25,7 @@ void IDT_add_entry(IDT_ENTRY * entry, uint32_t offset, uint16_t selector, uint8_
 	// Zeros the unused part.
 	entry->zero 		= NULL;
 
-	entry->type_attr	= (gate_type & 0xF) | ATTR_STORAGE | ATTR_KERNEL | ATTR_PRESENT;
+	entry->type_attr	= (gate_type & 0xF) | ATTR_USER | ATTR_STORAGE | ATTR_PRESENT;
 }
 
 /*
@@ -36,8 +36,12 @@ void IDT_init(void)
 
 	for (size_t i = 0; i < 21; i++)
 	{
-		IDT_add_entry(&table[i], ((uint32_t)&int0) + (i * 16), DEF_CODE_SEL, GATE_INT);
+		//IDT_add_entry(&table[i], ((uint32_t)&int0) + (i * 16), DEF_CODE_SEL, GATE_INT);
 	}
+
+	IDT_add_entry(&table[0x8], ((uint32_t)&__double_fault), DEF_CODE_SEL, GATE_INT);
+
+	IDT_add_entry(&table[0xFF], ((uint32_t)&__printf), DEF_CODE_SEL, GATE_INT);
 
 	// Keyboard Interrupt.
 	IDT_add_entry(&table[0x21], (uint32_t)&__irq_1, DEF_CODE_SEL, GATE_INT);

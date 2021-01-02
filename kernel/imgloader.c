@@ -56,7 +56,7 @@ static inline void memcpy(uint8_t * _Dst, uint8_t * _Src, size_t _Sz)
 uint32_t * il_load_elf64(posix_header * f)
 {
 	// Stores the base address of the program.
-	uint32_t * pbase = NULL;
+	uint32_t * pbase = NULL, * pstack = NULL;
 	// Gets the file header.
 	elf_header * pfile = (elf_header *)(f + 1);
 	// Checks if the file is infact an elf64.
@@ -81,6 +81,8 @@ uint32_t * il_load_elf64(posix_header * f)
 			// Loads the loadable segment.
 			// Allocates memory.
 			pbase = (uint32_t *)pfalloc_alloc();
+			// Allocates a stack.
+			pstack = (uint32_t *)pfalloc_alloc();
 			// Moves program into memory.
 			memcpy(pbase, ((uintptr_t)pfile) + ppro[i].offset, ppro[i].filesz);
 			// Virtualises the memory...
@@ -103,10 +105,20 @@ uint32_t * il_load_elf64(posix_header * f)
 	// Sets the virtual base to point to the allocated program in memory.
 	// Also makes it a user page because we need to access it in user mode.
 	paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_USER | PAGE_PRESENT | PAGE_RW);
+	paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_USER | PAGE_PRESENT | PAGE_RW);
+	// Added usermode attributes to all interrupts.
+	// ALL INTERRUPTS ARE TEMP USER MODE.
+	// Need to fix ESP for the TSS.
+	// Check DPL for other things like paging.
+	// Also the stack is in kernel memory!!
+	// Lets give usermode a new stack and keep the other in the TSS.
+	// NEED TO MAKE STACK USERMODE ACCESSABLE
+	// IMPLEMENT SYSCALLS
+	// INT TABLE CALLS BROKEN ALSO.
 
 	// Maps the test_func to usermode memory.
 	// Executes the program in ring 3.
-	uint32_t res = __r3_execute(pfile->entry);
+	uint32_t res = __r3_execute(pfile->entry, pstack);
 
 	kprintf("\nProgram returned: 0x%x\n", res);
 
@@ -115,13 +127,8 @@ uint32_t * il_load_elf64(posix_header * f)
 
 	// Switch to kernel paging dir when we come back. 
 	paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
+	paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_PRESENT | PAGE_RW);
 	// Deallocate program memory.
 
 	return pbase;
-}
-
-uint32_t test_prog(void)
-{
-	kprintf("HELLO MAN...\n");
-	return 1;
 }
