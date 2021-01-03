@@ -120,6 +120,7 @@ uint32_t * il_load_elf64(posix_header * f)
 	// INT TABLE CALLS BROKEN ALSO.
 	// PAGE TABLES ACCESSABLE FROM USERMODE?
 	// We need a new pagedirectory for usermode.
+	// Note that for security reasons the kernel should zero all the registers that are not preserved across SYSENTER or SYSCALL so no information is accidentally leaked from kernel to userspace.
 
 	// Maps the test_func to usermode memory.
 	// Executes the program in ring 3.

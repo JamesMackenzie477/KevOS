@@ -64,7 +64,7 @@ void GDT_init(void)
 	memset(&tss, 0, sizeof(tss));
 
 	tss.ss0	= SEL_KER_DATA_ID; // Kernel data selector.
-	tss.esp0 = &stack;
+	tss.esp0 = &stack; // USE ACTUAL KERNEL STACK IN THE FUTURE.
 
 	//tss.cs = 0x0b;
 	//tss.ss = tss.ds = tss.es = tss.fs = tss.gs = 0x13;
@@ -79,9 +79,9 @@ void GDT_init(void)
 	// Programs get their own page table with the kernel mapped into memory.
 
 	// Sets the parameters for sysenter.
-	//__write_msr(IA32_SYSENTER_CS, 	0x8, NULL);
-	//__write_msr(IA32_SYSENTER_ESP,	(uint32_t)&stack, NULL);
-	//__write_msr(IA32_SYSENTER_EIP,	(uint32_t)&syscall, NULL);
+	__write_msr(IA32_SYSENTER_CS, 	0x8, NULL);
+	__write_msr(IA32_SYSENTER_ESP,	(uint32_t)&stack, NULL);
+	__write_msr(IA32_SYSENTER_EIP,	(uint32_t)&syscall, NULL);
 
 	// kprintf("Interrupts Enabled: %d\n", (__read_eflags() >> 9) & 1);
 

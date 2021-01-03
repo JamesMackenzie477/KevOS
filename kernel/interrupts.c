@@ -12,7 +12,7 @@ void printf(const char * str)
 void double_fault(void)
 {
 	kprintf("double fault.\n");
-	for (;;);
+	//for (;;);
 }
 
 void irq_1()

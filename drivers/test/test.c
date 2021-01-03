@@ -6,8 +6,7 @@
 int __start(void)
 {
 	// Prints a string to the screen.
-	__printf("Hello world!\nThis is a test program...\n");
-	//__syscall();
-
+	printf("Hello world!\nThis is a test program...\n");
+	// Success.
 	return 1;
 }

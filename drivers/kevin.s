@@ -12,6 +12,7 @@ __printf:
 	ret
 
 __syscall:
+	mov 4(%esp), %eax
 	pop %edx
 	mov %esp, %ecx
-	syscall
+	sysenter
