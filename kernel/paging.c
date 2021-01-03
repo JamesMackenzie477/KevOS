@@ -28,6 +28,8 @@ void paging_map_page(uint32_t virtual, uint32_t physical, uint32_t flags)
 	// Checks if the addresses are 4KB aligned.
 	if (((virtual % PAGE_SIZE) == 0) && ((physical % PAGE_SIZE) == 0))
 	{
+		//kprintf("0x%x --> ", virtual);
+		//kprintf("0x%x\n\n", physical);
 		// Calculate the offset into the directory for the virtual address.
 		uint32_t dir_off = virtual / SIZE_OF_MEM_REGION;
 		// Calculates the offset into the page table.
@@ -60,7 +62,7 @@ void paging_map_pages(uint32_t virtual, uint32_t physical, size_t count, uint32_
  */
 static void paging_init_table(uint32_t * page_table, uint32_t physical)
 {
-	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 7;
+	for(size_t i = 0; i < MAX_PAGETABLE_ENTRIES; i++) page_table[i] = physical + (i * 0x1000) | 3;
 }
 
 /*
@@ -80,7 +82,7 @@ static void paging_init_directory(void)
 		// Defaults the entries.
 		paging_init_table(table, i * SIZE_OF_MEM_REGION);
 		// Adds the page table to the page directory.
-		page_directory[i] = (uint32_t)table | 7;
+		page_directory[i] = (uint32_t)table | 3;
 	}
 }
 
@@ -91,8 +93,10 @@ void paging_init(void)
 {
 	// Allocates the page directory.
 	page_directory = (uint32_t *)pfalloc_alloc();
+
 	// Initialises the page directory.
 	paging_init_directory();
+
 	// Sets the page directory address.
 	__set_page_dir(page_directory);
 	// Enables PAE.

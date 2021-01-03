@@ -14,6 +14,7 @@
  
  // Creates a stack so we can use C.
 .section .bss
+stack_bottom:
 .align 16
 .skip 16384
 stack_top:
@@ -26,6 +27,8 @@ stack_top:
 .global __write_port
 .global __read_msr
 .global __write_msr
+
+.global stack_top
 
 .type __start, @function
 .type __read_port, @function

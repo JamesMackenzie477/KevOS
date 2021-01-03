@@ -82,7 +82,7 @@ uint32_t * il_load_elf64(posix_header * f)
 			// Allocates memory.
 			pbase = (uint32_t *)pfalloc_alloc();
 			// Allocates a stack.
-			pstack = (uint32_t *)pfalloc_alloc();
+			// pstack = (uint32_t *)pfalloc_alloc();
 			// Moves program into memory.
 			memcpy(pbase, ((uintptr_t)pfile) + ppro[i].offset, ppro[i].filesz);
 			// Virtualises the memory...
@@ -104,8 +104,11 @@ uint32_t * il_load_elf64(posix_header * f)
 	kprintf("Calling entry...\n\n");
 	// Sets the virtual base to point to the allocated program in memory.
 	// Also makes it a user page because we need to access it in user mode.
+
+	// MAPS KERNEL STACK. TEMP.
+	paging_map_page(GET_PAGE_BASE(&stack_top), GET_PAGE_BASE(&stack_top), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 	paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_USER | PAGE_PRESENT | PAGE_RW);
-	paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_USER | PAGE_PRESENT | PAGE_RW);
+	// paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 	// Added usermode attributes to all interrupts.
 	// ALL INTERRUPTS ARE TEMP USER MODE.
 	// Need to fix ESP for the TSS.
@@ -115,19 +118,22 @@ uint32_t * il_load_elf64(posix_header * f)
 	// NEED TO MAKE STACK USERMODE ACCESSABLE
 	// IMPLEMENT SYSCALLS
 	// INT TABLE CALLS BROKEN ALSO.
+	// PAGE TABLES ACCESSABLE FROM USERMODE?
+	// We need a new pagedirectory for usermode.
 
 	// Maps the test_func to usermode memory.
 	// Executes the program in ring 3.
 	uint32_t res = __r3_execute(pfile->entry, pstack);
 
-	kprintf("\nProgram returned: 0x%x\n", res);
-
 	// STILL IN USER MODE...
 	// LETS SWITCH BACK!
 
-	// Switch to kernel paging dir when we come back. 
-	paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
-	paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_PRESENT | PAGE_RW);
+	kprintf("\nProgram returned: 0x%x\n", res);
+
+	// Switch to kernel paging dir when we come back.
+	//paging_map_pages(0x100000, 0x100000, 10, PAGE_PRESENT | PAGE_RW);
+	//paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
+	//paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_PRESENT | PAGE_RW);
 	// Deallocate program memory.
 
 	return pbase;

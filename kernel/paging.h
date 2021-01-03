@@ -12,6 +12,11 @@
 #define GET_PAGE_TABLE(ENTRY) 	((uint32_t *)(ENTRY & GET_PAGE_TABLE_MASK))
 
 /**
+ * Gets the base address of the page where the address is found.
+ */
+#define GET_PAGE_BASE(A) (((uint32_t)A) & 0xFFFFF000)
+
+/**
  * Defines flags for the page entry.
  */
 #define PAGE_PRESENT 	0x1
