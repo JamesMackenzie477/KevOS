@@ -1,9 +1,16 @@
 #ifndef _KEVIN_H
 #define _KEVIN_H
 
-extern void __printf(const char *);
-extern void __syscall(uint32_t funcId);
+#include <stdarg.h>
 
-void printf(const char *);
+/**
+ * Defines the various syscalls can can be called.
+ */
+extern void __printf(const char *, va_list);
+
+/**
+ * Printf wrapper to allow varargs to be passed to the kernel.
+ */
+void printf(const char *, ...);
 
 #endif

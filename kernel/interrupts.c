@@ -9,10 +9,16 @@ void printf(const char * str)
 	kprintf("%s", str);
 }
 
+void page_fault(uint32_t err)
+{
+	kprintf("page fault at address 0x%x ", __read_cr2());
+	kprintf("code: 0x%x\n", err);
+}
+
 void double_fault(void)
 {
 	kprintf("double fault.\n");
-	//for (;;);
+	for (;;);
 }
 
 void irq_1()

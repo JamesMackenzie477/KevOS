@@ -22,18 +22,18 @@
 .type __\f, @function
 __\f:
 	cli
-	pusha
+	/*pusha
 	push %ds
 	push %eax
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
 	mov %ax, %fs
-	mov %ax, %gs
+	mov %ax, %gs*/
 	call \f
-	pop %eax
+	/*pop %eax
 	pop %ds
-	popa
+	popa*/
 	sti
 	iret
 .endm
@@ -92,5 +92,6 @@ __read_eflags:
  */
 
 irtn irq_1
+irtn page_fault
 irtn double_fault
 irtn printf

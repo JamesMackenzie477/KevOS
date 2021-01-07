@@ -41,6 +41,8 @@ void IDT_init(void)
 
 	IDT_add_entry(&table[0x8], ((uint32_t)&__double_fault), DEF_CODE_SEL, GATE_INT);
 
+	IDT_add_entry(&table[0xE], ((uint32_t)&__page_fault), DEF_CODE_SEL, GATE_INT);
+
 	IDT_add_entry(&table[0xFF], ((uint32_t)&__printf), DEF_CODE_SEL, GATE_INT);
 
 	// Keyboard Interrupt.

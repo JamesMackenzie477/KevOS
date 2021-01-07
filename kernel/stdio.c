@@ -64,3 +64,14 @@ void kprintf(const char * s, ...)
 	// Iterates through the formatted string and prints each character.
 	for (size_t i = 0; i < strlen(c); i++) putchar(c[i]);
 }
+
+// Prints a string to the screen.
+void kprintfl(const char * s, va_list f)
+{
+	// Stores the formatted string.
+	char c[100];
+	// Formats the string.
+	format(&c, s, f);
+	// Iterates through the formatted string and prints each character.
+	for (size_t i = 0; i < strlen(c); i++) putchar(c[i]);
+}

@@ -1,9 +1,12 @@
 #include "kevin.h"
 
-/*
- * Prints a string to the std output.
+/**
+ * Printf wrapper to allow varargs to be passed to the kernel.
  */
-void printf(const char *)
+void printf(const char * s, ...)
 {
-	__syscall(0);
+	va_list va;
+	va_start(va, s);
+	__printf(s, va);
+	va_end(va);
 }

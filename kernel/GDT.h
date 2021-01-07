@@ -98,11 +98,17 @@ extern void __set_GDT(GDT_INFO *);
 extern void __reload_seg_regs(void);
 extern void __tss_flush(void);
 extern uint32_t __read_eflags(void);
+extern void __syshandler(void);
 
 /*
  * Enables the kernel to interact with the Global Descriptor Table.
  */
 
 void GDT_init(void);
+
+/**
+ * Syscalls.
+ */
+void printf_syscall(const char *, va_list);
 
 #endif

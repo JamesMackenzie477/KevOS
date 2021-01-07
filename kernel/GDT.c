@@ -20,10 +20,22 @@ static TSS_ENTRY tss;
  */
 static uint32_t stack[4096];
 
-void syscall(void)
+/**
+ * Syscall table to be indexed via the handler.
+ */
+uint32_t syscall_table[] = {
+   (uint32_t)printf_syscall
+};
+
+#define SYSCALLID 	0x0
+#define RETADDR 	0x1
+
+/**
+ * Handles system calls.
+ */
+void printf_syscall(const char * s, va_list f)
 {
-	kprintf("SYSCALL...");
-	for (;;);
+	kprintfl(s, f);
 }
 
 /*
@@ -81,7 +93,7 @@ void GDT_init(void)
 	// Sets the parameters for sysenter.
 	__write_msr(IA32_SYSENTER_CS, 	0x8, NULL);
 	__write_msr(IA32_SYSENTER_ESP,	(uint32_t)&stack, NULL);
-	__write_msr(IA32_SYSENTER_EIP,	(uint32_t)&syscall, NULL);
+	__write_msr(IA32_SYSENTER_EIP,	(uint32_t)&__syshandler, NULL);
 
 	// kprintf("Interrupts Enabled: %d\n", (__read_eflags() >> 9) & 1);
 
