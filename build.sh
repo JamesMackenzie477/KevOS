@@ -1,6 +1,9 @@
 rm -r build
 mkdir -p build/iso/boot/grub
-cd source
+cd source/drivers
+./build.sh
+mv -v build/* ../disk/
+cd ..
 tar cvf ../build/disk.tar disk/
 cd ../build
 $HOME/opt/cross/bin/i686-elf-as ../source/asm/*.s -o asm.o

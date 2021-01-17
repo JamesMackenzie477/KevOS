@@ -101,7 +101,7 @@ uint32_t * il_load_elf64(posix_header * f)
 	}*/
 
 	// Calls the entry point.
-	kprintf("Calling entry...\n\n");
+	// kprintf("Calling entry...\n\n");
 	// Sets the virtual base to point to the allocated program in memory.
 	// Also makes it a user page because we need to access it in user mode.
 
@@ -129,7 +129,7 @@ uint32_t * il_load_elf64(posix_header * f)
 	// STILL IN USER MODE...
 	// LETS SWITCH BACK!
 
-	kprintf("\nProgram returned: 0x%x\n", res);
+	// kprintf("\nProgram returned: 0x%x\n", res);
 
 	// Switch to kernel paging dir when we come back.
 	//paging_map_pages(0x100000, 0x100000, 10, PAGE_PRESENT | PAGE_RW);

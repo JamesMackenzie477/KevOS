@@ -31,15 +31,15 @@ void kernel_main(MBINFO * mbinfo)
 	// kprintf("%s>", fs_dir());
 
 	// Prints the files in the directory.
-	kprintf("Files:\n");
-	fs_ls();
+	//kprintf("Files:\n");
+	//fs_ls();
 
-	kprintf("\nExecuting %s...\n", "disk/test.bin");
+	// kprintf("\nExecuting %s...\n", "disk/cli.bin");
 	// Attempts to load a program.
-	/*il_prog img =*/uintptr_t img = il_load_elf64(fs_get_file("disk/test.bin"));
+	/*il_prog img =*/uintptr_t img = il_load_elf64(fs_get_file("disk/cli.bin"));
 	// Calls the entry point of the program.
 	// il_call_entry(img);
-	if (img) kprintf("Finished executing %s.\n", "disk/test.bin");
+	//if (img) kprintf("Finished executing %s.\n", "disk/cli.bin");
 
 	// scanf() ...
 	// if (cmd == "cd") ...
