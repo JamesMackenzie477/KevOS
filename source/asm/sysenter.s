@@ -26,8 +26,9 @@ __syshandler:
 	pop %edi
 	pop %ecx
 	pop %edx
+	sti
 	// Returns to usermode.
-	iret
+	sysexit
 
 // Handler wrappers that identify with the id and perform the necessary prolog to set up the arguments for the actul call.
 // We should zero 
