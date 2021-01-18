@@ -17,10 +17,6 @@ int main(void)
 		// Parses the user input.
 		break;
 	}
-
-	// TEMP - STOP PROGRAM FROM EXITING AS KERNEL WILL CONTINUE IN USER MODE.
-	for (;;);
-
 	// Success.
 	return 1;
 }

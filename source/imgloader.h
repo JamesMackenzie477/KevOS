@@ -98,6 +98,7 @@ typedef struct _section_header
  * Defines the default base for the program.
  */
 #define IL_DEF_BASE 0x1000
+#define IL_BOOTSTRAP_ADDR 0x2000
 
 #define PT_LOAD 0x1
 
@@ -111,6 +112,7 @@ extern uint32_t __r3_bootstrap_start;
 extern uint32_t __r3_bootstrap_end;
 extern uint32_t stack_top;
 
+void il_init(void);
 uint32_t * il_load_elf64(posix_header *);
 uint32_t test_prog(void);
 

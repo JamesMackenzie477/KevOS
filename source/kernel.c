@@ -18,6 +18,8 @@ void kernel_main(MBINFO * mbinfo)
 	pic_init(); // apic_init();
 	// Initialises the file system.
 	fs_init();
+	// Initialises the image loader.
+	il_init();
 
 	// Maps the kernel to to it's default virtual address (Higher Half Kernel).
 	// paging_map_pages(KERNEL_MAPPING_ADDR, &kernel_start, 	MAX_PAGETABLE_ENTRIES, PAGE_PRESENT | PAGE_RW);

@@ -24,7 +24,8 @@ static uint32_t stack[4096];
  * Syscall table to be indexed via the handler.
  */
 uint32_t syscall_table[] = {
-   (uint32_t)printf_syscall
+   (uint32_t)syscall_printf,
+   (uint32_t)syscall_return
 };
 
 #define SYSCALLID 	0x0
@@ -33,7 +34,16 @@ uint32_t syscall_table[] = {
 /**
  * Handles system calls.
  */
-void printf_syscall(const char * s, va_list f)
+void syscall_return(uint32_t value)
+{
+	kprintf("RETURN...");
+	for(;;);
+}
+
+/**
+ * Handles system calls.
+ */
+void syscall_printf(const char * s, va_list f)
 {
 	kprintfl(s, f);
 }

@@ -91,9 +91,13 @@ __r3_bootstrap_start:
 	// Calls the program entry.
 	call %eax
 	// Cleans up and jumps back to kernel mode.
-	
-	
-	ret
+__no_ret:
+	jmp __no_ret
+
+	mov $2, %eax
+	sysenter
+
+
 __r3_bootstrap_end:
 
 

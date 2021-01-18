@@ -56,7 +56,7 @@ static inline void memcpy(uint8_t * _Dst, uint8_t * _Src, size_t _Sz)
 uint32_t * il_load_elf64(posix_header * f)
 {
 	// Stores the base address of the program.
-	uint32_t * pbase = NULL, * pboot = NULL, * pstack = NULL;
+	uint32_t * pbase = NULL, * pstack = NULL;
 	// Gets the file header.
 	elf_header * pfile = (elf_header *)(f + 1);
 	// Checks if the file is infact an elf64.
@@ -84,10 +84,7 @@ uint32_t * il_load_elf64(posix_header * f)
 			// Allocates a stack.
 			// pstack = (uint32_t *)pfalloc_alloc();
 
-			// Adds the bootstrapper.
-			pboot = (uint32_t *)pfalloc_alloc();
-			uint32_t bootSize = ((uint32_t)&__r3_bootstrap_end) - ((uint32_t)&__r3_bootstrap_start);
-			memcpy(pboot, (uint32_t)&__r3_bootstrap_start, bootSize);
+
 
 			// Moves program into memory.
 			memcpy(pbase, ((uintptr_t)pfile) + ppro[i].offset, ppro[i].filesz);
@@ -114,7 +111,6 @@ uint32_t * il_load_elf64(posix_header * f)
 	// MAPS KERNEL STACK. TEMP.
 	paging_map_page(GET_PAGE_BASE(&stack_top), GET_PAGE_BASE(&stack_top), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 	paging_map_page(IL_DEF_BASE, paging_virtual_to_physical(pbase), PAGE_USER | PAGE_PRESENT | PAGE_RW);
-	paging_map_page(0x2000, paging_virtual_to_physical(pboot), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 	// set bootstrapper to usermode.
 	// paging_map_page(paging_virtual_to_physical((uint32_t)(&__r3_bootstrap) & 0xFFFFF000), paging_virtual_to_physical((uint32_t)(&__r3_bootstrap)  & 0xFFFFF000), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 	// paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_USER | PAGE_PRESENT | PAGE_RW);
@@ -133,7 +129,7 @@ uint32_t * il_load_elf64(posix_header * f)
 
 	// Maps the test_func to usermode memory.
 	// Executes the program in ring 3.
-	uint32_t res = __r3_execute(0x2000, pfile->entry);
+	uint32_t res = __r3_execute(IL_BOOTSTRAP_ADDR, pfile->entry);
 
 	// STILL IN USER MODE...
 	// LETS SWITCH BACK!
@@ -149,4 +145,13 @@ uint32_t * il_load_elf64(posix_header * f)
 	// Deallocate program memory.
 
 	return pbase;
+}
+
+void il_init(void)
+{
+	// Adds the bootstrapper.
+	uint32_t pboot = (uint32_t *)pfalloc_alloc();
+	uint32_t bootSize = ((uint32_t)&__r3_bootstrap_end) - ((uint32_t)&__r3_bootstrap_start);
+	memcpy(pboot, (uint32_t)&__r3_bootstrap_start, bootSize);
+	paging_map_page(IL_BOOTSTRAP_ADDR, paging_virtual_to_physical(pboot), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 }
