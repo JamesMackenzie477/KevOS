@@ -129,7 +129,7 @@ uint32_t * il_load_elf64(posix_header * f)
 
 	// Maps the test_func to usermode memory.
 	// Executes the program in ring 3.
-	uint32_t res = __r3_execute(IL_BOOTSTRAP_ADDR, pfile->entry);
+	uint32_t res = __r3_execute(&__r3_bootstrap_start, pfile->entry);
 
 	// STILL IN USER MODE...
 	// LETS SWITCH BACK!
@@ -150,8 +150,8 @@ uint32_t * il_load_elf64(posix_header * f)
 void il_init(void)
 {
 	// Adds the bootstrapper.
-	uint32_t pboot = (uint32_t *)pfalloc_alloc();
-	uint32_t bootSize = ((uint32_t)&__r3_bootstrap_end) - ((uint32_t)&__r3_bootstrap_start);
-	memcpy(pboot, (uint32_t)&__r3_bootstrap_start, bootSize);
-	paging_map_page(IL_BOOTSTRAP_ADDR, paging_virtual_to_physical(pboot), PAGE_USER | PAGE_PRESENT | PAGE_RW);
+	//uint32_t pboot = (uint32_t *)pfalloc_alloc();
+	//uint32_t bootSize = ((uint32_t)&__r3_bootstrap_end) - ((uint32_t)&__r3_bootstrap_start);
+	//memcpy(pboot, (uint32_t)&__r3_bootstrap_start, bootSize);
+	paging_map_page(paging_virtual_to_physical(&__r3_bootstrap_start), paging_virtual_to_physical(&__r3_bootstrap_start), PAGE_USER | PAGE_PRESENT | PAGE_RW);
 }

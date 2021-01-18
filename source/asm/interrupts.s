@@ -86,6 +86,8 @@ __r3_execute:
 	iret
 
 
+.align 0x1000
+
 // Could be its own executable.
 __r3_bootstrap_start:
 	// Calls the program entry.
@@ -99,6 +101,8 @@ __no_ret:
 
 
 __r3_bootstrap_end:
+
+.align 0x1000
 
 
 __read_eflags:

@@ -98,7 +98,6 @@ typedef struct _section_header
  * Defines the default base for the program.
  */
 #define IL_DEF_BASE 0x1000
-#define IL_BOOTSTRAP_ADDR 0x2000
 
 #define PT_LOAD 0x1
 
