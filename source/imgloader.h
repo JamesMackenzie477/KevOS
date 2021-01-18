@@ -107,6 +107,8 @@ typedef struct _section_header
 typedef const char * (*entry_t)();
 
 extern uint32_t __r3_execute(uint32_t f, uint32_t s);
+extern uint32_t __r3_bootstrap_start;
+extern uint32_t __r3_bootstrap_end;
 extern uint32_t stack_top;
 
 uint32_t * il_load_elf64(posix_header *);

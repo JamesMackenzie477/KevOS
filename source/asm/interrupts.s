@@ -7,6 +7,8 @@
 .global __tss_flush
 .global __r3_execute
 .global __read_eflags
+.global __r3_bootstrap_start
+.global __r3_bootstrap_end
 
 .type __set_GDT, @function
 .type __reload_seg_regs, @function
@@ -80,7 +82,20 @@ __r3_execute:
 	pushf
 	push $0x1B
 	push 4(%eax)
+	mov 8(%eax), %eax
 	iret
+
+
+// Could be its own executable.
+__r3_bootstrap_start:
+	// Calls the program entry.
+	call %eax
+	// Cleans up and jumps back to kernel mode.
+	
+	
+	ret
+__r3_bootstrap_end:
+
 
 __read_eflags:
 	pushf

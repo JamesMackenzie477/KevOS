@@ -40,10 +40,10 @@ void IDT_init(void)
 	}
 
 	IDT_add_entry(&table[0x8], ((uint32_t)&__double_fault), DEF_CODE_SEL, GATE_INT);
-
 	IDT_add_entry(&table[0xE], ((uint32_t)&__page_fault), DEF_CODE_SEL, GATE_INT);
 	// Keyboard Interrupt.
 	IDT_add_entry(&table[0x21], (uint32_t)&__irq_1, DEF_CODE_SEL, GATE_INT);
+	
 	// Sets the size of the IDT.
 	info.limit = sizeof(table) - 1;
 	// Sets the linear address of the IDT.
