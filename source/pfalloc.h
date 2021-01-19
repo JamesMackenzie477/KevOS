@@ -42,6 +42,7 @@ typedef struct _MBINFO
 
 void 		pfalloc_init		(MBINFO * 	mbinfo 		);
 void * 		pfalloc_alloc		(void 					);
+void 		pfalloc_release		(uintptr_t 	base_addr	);
 void 		pfalloc_set			(uint32_t 	page_num 	);
 
 #endif

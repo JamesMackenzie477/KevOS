@@ -143,6 +143,7 @@ uint32_t * il_load_elf64(posix_header * f)
 	//paging_map_page(IL_DEF_BASE, IL_DEF_BASE, PAGE_PRESENT | PAGE_RW);
 	//paging_map_page(pstack, paging_virtual_to_physical(pstack), PAGE_PRESENT | PAGE_RW);
 	// Deallocate program memory.
+	pfalloc_release(pbase);
 
 	return pbase;
 }

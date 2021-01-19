@@ -171,10 +171,30 @@ void * pfalloc_alloc(void)
  * Flips the state of the specified page.
  * Can be used to allocate and release pages.
  */
+void pfalloc_release(uintptr_t base_addr)
+{
+	// Makes sure this is the pase address of a page.
+	if ((base_addr % PAGE_SIZE) == 0)
+	{
+		// Gets the page number.
+		uint32_t page_num = addr_to_page(base_addr);
+		// Is the page allocated?
+		// if ((~pages[PAGE_TO_BYTE(page_num)] >> (page_num % 8)) & 1)
+		{
+			// Sets the page as used.
+			pages[PAGE_TO_BYTE(page_num)] &= (0xFF ^ SET_PAGE_MASK(page_num));
+		}
+	}
+}
+
+/*
+ * Flips the state of the specified page.
+ * Can be used to allocate and release pages.
+ */
 void pfalloc_set(uint32_t page_num)
 {
 	// Sets the page as used.
-	pages[PAGE_TO_BYTE(page_num)] ^= SET_PAGE_MASK(page_num);
+	pages[PAGE_TO_BYTE(page_num)] |= SET_PAGE_MASK(page_num);
 }
 
 /*
