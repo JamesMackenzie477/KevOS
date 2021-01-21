@@ -253,8 +253,8 @@ char * poll_keyboard(void)
 /*
  * Character mappings.
  */
-static const char * row1 		= "`1234567890-= ";
-static const char * row1_upper 	= "¬!\"£$%^&*()_+ ";
+static const char * row1 		= "`1234567890-=\b";
+static const char * row1_upper 	= "¬!\"£$%^&*()_+\b";
 
 static const char * row2 		= "\tqwertyuiop[]\n";
 static const char * row2_upper 	= "\tQWERTYUIOP{}\n";

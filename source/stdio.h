@@ -15,6 +15,11 @@
 #define SHORT_INDEX(I, S)	((I >> (S * 16)) & 0xFFFF)
 #define BYTE_INDEX(I, S)	((I >> (S * 8)) & 0xFF)
 
+/**
+ * Helper to get the VGA buffer index using the line and column indexes.
+ */
+#define VGA_GET_INDEX(L, C) ((L * VGA_MAX_COLS) + C)
+
 typedef struct _VGA_ENTRY
 {
 	char character;

@@ -1,54 +1,126 @@
 #include "stdio.h"
 
 // Sets the VGA buffer address.
-VGA_ENTRY * vga_buff = (VGA_ENTRY *)VGA_BUFF_ADDR;
+static VGA_ENTRY * vga_buff = (VGA_ENTRY *)VGA_BUFF_ADDR;
 
-int line, column;
+/**
+ * Stores the column and line index.
+ */
+static uint32_t line, column;
 
-// Initialises the VGA buffer.
-void stdio_init(void)
+/**
+ * Adds the character to the screen (internal function).
+ */
+static inline void stdio_vga_put(uint8_t c, uint8_t col)
 {
+	// Adds the character to the VGA buffer.
+	vga_buff[VGA_GET_INDEX(line, column)].character = c;
+	vga_buff[VGA_GET_INDEX(line, column)].colour = col;
+}
+
+/**
+ * Goes to the previous column.
+ */
+static inline void stdio_vga_prev(void)
+{
+	if (--column < 0) { column = VGA_MAX_COLS; line--; }
+}
+
+/**
+ * Goes to the next column.
+ */
+static inline void stdio_vga_next(void)
+{
+	if (++column > VGA_MAX_COLS) { column = 0; line++; }
+}
+
+/**
+ * Clears the screen.
+ */
+static void stdio_cls(void)
+{
+	// Iterates through each line in the buffer
 	for (int i = 0; i < VGA_MAX_LINES; i++)
 	{
+		// Iterates through each column.
 		for (int y = 0; y < VGA_MAX_COLS; y++)
 		{
-			vga_buff[((i * VGA_MAX_COLS) + y)].character = NULL;
-			vga_buff[((i * VGA_MAX_COLS) + y)].colour = NULL;
+			// Clears the column.
+			stdio_vga_put(NULL, NULL);
 		}
 	}
-	
-	line = 0;
-	column = 0;
+	// Resets the line and column counter.
+	line = 0; column = 0;
+}
+
+/**
+ * Creates a newline on the screen.
+ */
+static inline void stdio_newline(void)
+{
+	// Goes to the start of the next line.
+	line++; column = 0;
+}
+
+/**
+ * Creates a backspace on the screen.
+ */
+static inline void stdio_backspace(void)
+{
+	// Goes to the previous column.
+	stdio_vga_prev();
+	// Adds the character to the VGA buffer.
+	stdio_vga_put(NULL, NULL);
+}
+
+/**
+ * Adds the character to the screen (internal function).
+ */
+static inline void stdio_putchar(uint8_t c, uint8_t col)
+{
+	// Adds the character to the VGA buffer.
+	stdio_vga_put(c, col);
+	// Goes to the next column.
+	stdio_vga_next();
 }
 
 // Prints a single character to the screen.
 void putchar(char c)
 {
-	// NEWLINE
-	if (c == '\n')
+	// Checks for special characters.
+	switch (c)
 	{
-		line++; column = 0;
+		case '\n':
+			stdio_newline();
+			break;
+		case '\t':
+			//stdio_tab();
+			break;
+		case '\b':
+			stdio_backspace();
+			break;
+		default:
+			stdio_putchar(c, 9);
+			break;
 	}
-	else
-	{
-		// Adds the character and colour to the buffer.
-		vga_buff[((line * VGA_MAX_COLS) + column)].character = c;
-		vga_buff[((line * VGA_MAX_COLS) + column)].colour = 7;
-
-		if (++column > VGA_MAX_COLS) { column = 0; line++; }
-	}
-	// NEWPAGE
-	if (line > VGA_MAX_LINES)
-	{
-		// Clear buffer!
-		stdio_init();
-
-		line = 0;
-		column = 0;
-	}
+	// Starts a new page.
+	// We should really shunt the screen up by one.
+	// Buffer old screen so it can be retrieved later.
+	if (line > VGA_MAX_LINES) stdio_cls();
 }
 
-// Prints a string to the screen.
+/**
+ * Initialises the VGA buffer.
+ */
+void stdio_init(void)
+{
+	// Clears the screen.
+	stdio_cls();
+}
+
+/**
+ * Varargs function that will print the given format string to the standard output.
+ */
 void kprintf(const char * s, ...)
 {
 	// Stores the formatted string.
@@ -65,7 +137,10 @@ void kprintf(const char * s, ...)
 	for (size_t i = 0; i < strlen(c); i++) putchar(c[i]);
 }
 
-// Prints a string to the screen.
+/**
+ * Varargs function that will print the given format string to the standard output.
+ * Uses va_list for system call use.
+ */
 void kprintfl(const char * s, va_list f)
 {
 	// Stores the formatted string.

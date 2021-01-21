@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include "stdio.h"
 
 #define STRING_CHARACTER_NOT_FOUND -1
 
