@@ -3,6 +3,8 @@
 
 #include "ports.h"
 #include "apic.h"
+#include "pfalloc.h"
+#include "paging.h"
 
 #define IS_LETTER(sc) ((sc < 0x40) && (sc > 0xF))
 
@@ -51,6 +53,11 @@
 //    shift    released  numlock   scrllock
 
 #define SHIFT_DOWN 0x2
+
+/**
+ * The address of the shared buffer.
+ */
+#define SBUFF_ADDR 0x1B0000
 
 /*
  * Used to mask new scan codes to find various information.

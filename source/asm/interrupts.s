@@ -117,4 +117,3 @@ __read_eflags:
 irtn irq_1
 irtn page_fault
 irtn double_fault
-irtn printf

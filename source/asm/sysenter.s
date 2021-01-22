@@ -16,6 +16,8 @@ __syshandler:
 	push %ebx
 	// Gets the system call table.
 	lea syscall_table, %edx
+	// Generates the correct offset.
+	shl $0x2, %eax
 	// Indexes with the syscall id.
 	add %eax, %edx
 	// Calls the syscall.

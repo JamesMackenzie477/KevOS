@@ -20,34 +20,6 @@ static TSS_ENTRY tss;
  */
 static uint32_t stack[4096];
 
-/**
- * Syscall table to be indexed via the handler.
- */
-uint32_t syscall_table[] = {
-   (uint32_t)syscall_printf,
-   (uint32_t)syscall_return
-};
-
-#define SYSCALLID 	0x0
-#define RETADDR 	0x1
-
-/**
- * Handles system calls.
- */
-void syscall_return(uint32_t value)
-{
-	kprintf("RETURN...");
-	for(;;);
-}
-
-/**
- * Handles system calls.
- */
-void syscall_printf(const char * s, va_list f)
-{
-	kprintfl(s, f);
-}
-
 /*
  * Encodes an entry for the Global Descriptor Table.
  */

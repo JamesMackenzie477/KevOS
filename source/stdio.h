@@ -4,9 +4,12 @@
 #include <stddef.h>
 #include "string.h"
 
-#define VGA_BUFF_ADDR 0xB8000
-#define VGA_MAX_COLS 80
-#define VGA_MAX_LINES 25
+#define VGA_BUFF_ADDR 	0xB8000
+#define VGA_MAX_COLS 	80
+#define VGA_MAX_LINES 	25
+#define VGA_TAB_LEN 	4
+
+#define VGA_COL_BLUE 	0x9
 
 /*
  * Allows extraction of a certain type from the index of the given variable.
@@ -29,7 +32,7 @@ typedef struct _VGA_ENTRY
 // Declares the interface methods.
 void stdio_init(void);
 void kprintf(const char * s, ...);
-void kprintfl(const char * s, va_list f);
+void stdio_print(const char * s, va_list f);
 void putchar(char c);
 
 #endif

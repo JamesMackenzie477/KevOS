@@ -48,3 +48,4 @@
 
 // Creates a new syscall called printf that triggers the zeroth system function.
 sysdef __printf 0x0 // 2
+sysdef __fread 0x2 // 3

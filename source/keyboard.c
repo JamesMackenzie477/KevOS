@@ -1,10 +1,19 @@
 #include "keyboard.h"
 
+/**
+ * Shared buffer to make scancodes accessable to usermode processes.
+ */
+uint8_t * shared_buff;
+
+/**
+ * Index of the shared buffer.
+ */
+size_t buff_i = 0;
+
 /*
  * Keeps track of the state of certain "shift" keys so scancode can be masked.
  */
 static char shift_mask = 0;
-
 
 /*
  * Maps the keyboard scan codes to something more understandable.
@@ -222,11 +231,38 @@ static inline uint8_t keyboard_con(uint8_t cmd)
 	return __read_port(PS2_PORT_DATA);
 }
 
+/**
+ * Initialises the shared buffer.
+ */
+static inline void buffer_init()
+{
+	// Creates a shared buffer.
+	shared_buff = (uint8_t *)pfalloc_alloc();
+	// Maps it into the user process.
+	// paging_map_page(SBUFF_ADDR, paging_virtual_to_physical(shared_buff), PAGE_USER | PAGE_PRESENT | PAGE_RW);
+
+	shared_buff[buff_i] 	= NULL;
+}
+
+/**
+ * Adds a character to the buffer.
+ */
+static inline void buffer_add(uint8_t c)
+{
+	shared_buff[buff_i++] 	= c;
+	shared_buff[buff_i] 	= NULL;
+}
+
 /*
  * Initialises the keyboard driver.
  */
 void keyboard_init(void)
 {
+	// TEMP - SHOULD BE DONE INDIVIDUALLY FOR EACH PROCESS.
+	// ----------------------------------------------------
+	buffer_init();
+	// ----------------------------------------------------
+
 	//if (keyboard_con(0xAA) != PS2_CON_TEST_PASSED	) return;
 	//if (keyboard_con(0xAB) != PS2_PORT_TEST_PASSED	) return;
 	//if (keyboard_con(0xA9) != PS2_PORT_TEST_PASSED	) return;
@@ -322,9 +358,12 @@ void keyboard_handler(void)
 	if (ascii)
 	{
 		// Prints the scan code.
-		kprintf("%c", ascii);
+		putchar(ascii);
+		// Adds the scan code to the shared buffer.
+		buffer_add(ascii);
 	}
 	// Create a new process?
-	// Store scan codes in a buffer ?
+	// Store scan codes in a shared buffer
+	// Allow usermode processes to read this buffer.
 	// align interrupts
 }

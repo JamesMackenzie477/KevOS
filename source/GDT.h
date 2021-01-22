@@ -106,10 +106,4 @@ extern void __syshandler(void);
 
 void GDT_init(void);
 
-/**
- * Syscalls.
- */
-void syscall_printf(const char *, va_list);
-void syscall_return(uint32_t value);
-
 #endif
